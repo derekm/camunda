@@ -5,8 +5,16 @@
  * Licensed under the Camunda License 1.0. You may not use this file
  * except in compliance with the Camunda License 1.0.
  */
-package io.camunda.exporter.rdbms.domain;
+package io.camunda.exporter.rdbms;
 
-public record ProcessInstanceModel(
-    String processInstanceKey
-) {}
+
+import io.camunda.zeebe.protocol.record.Record;
+import io.camunda.zeebe.protocol.record.RecordValue;
+
+public interface RdbmsExportHandler<T extends RecordValue> {
+
+  boolean canExport(Record<T> record);
+
+  void export(Record<T> record);
+
+}

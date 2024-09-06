@@ -7,18 +7,15 @@
  */
 package io.camunda.exporter.rdbms;
 
-import io.camunda.exporter.rdbms.sql.MapperHolder;
-import io.camunda.exporter.rdbms.sql.ProcessInstanceMapper;
+import io.camunda.db.rdbms.RdbmsService;
+import io.camunda.zeebe.broker.SpringBrokerBridge;
+import io.camunda.zeebe.broker.exporter.context.ExporterContext;
 import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.exporter.api.context.Controller;
 import io.camunda.zeebe.protocol.record.Record;
-import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.protocol.record.value.ProcessInstanceRecordValue;
-import java.time.Duration;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,82 +25,67 @@ public class RdbmsExporter implements Exporter {
 
   private Controller controller;
   private long lastPosition = -1;
-  private ProcessInstanceMapper processInstanceMapper;
+
+  private RdbmsService rdbmsService;
+
+  private final HashMap<ValueType, RdbmsExportHandler> registeredHandlers = new HashMap<>();
 
   @Override
   public void configure(final Context context) {
-    LOG.info("RDBMS Exporter configured!");
+    registerHandler();
+
+    LOG.info("[RDBMS Exporter] RDBMS Exporter configured!");
   }
 
   @Override
   public void open(final Controller controller) {
     this.controller = controller;
 
-    scheduleDelayedFlush();
-
-    LOG.info("Exporter opened");
+    LOG.info("[RDBMS Exporter] Exporter opened");
   }
 
   @Override
   public void close() {
     try {
-      flush();
       updateLastExportedPosition();
     } catch (final Exception e) {
-      LOG.warn("Failed to flush records before closing exporter.", e);
+      LOG.warn("[RDBMS Exporter] Failed to flush records before closing exporter.", e);
     }
 
-    LOG.info("Exporter closed");
+    LOG.info("[RDBMS Exporter] Exporter closed");
   }
 
   @Override
   public void export(final Record<?> record) {
-    LOG.debug("EXPORT IT!");
+    LOG.debug("[RDBMS Exporter] Exporting record {}-{} - {}:{}", record.getPartitionId(),
+        record.getPosition(),
+        record.getValueType(), record.getIntent());
 
-    if (record.getValueType() == ValueType.PROCESS_INSTANCE
-        && ((ProcessInstanceRecordValue) record.getValue()).getBpmnElementType() == BpmnElementType.PROCESS
-        && record.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED) {
-      ProcessInstanceRecordValue value = (ProcessInstanceRecordValue) record.getValue();
-
-      MapperHolder.PROCESS_INSTANCE_MAPPER.insertProcessInstance(
-          Long.toString(value.getProcessInstanceKey()));
+    if (registeredHandlers.containsKey(record.getValueType())) {
+      final var handler = registeredHandlers.get(record.getValueType());
+      if (handler.canExport(record)) {
+        LOG.debug("[RDBMS Exporter] Exporting record {} with handler {}", record.getValue(),
+            handler.getClass());
+        handler.export(record);
+      } else {
+        LOG.debug("[RDBMS Exporter] Handler {} can not export record {}", handler.getClass(),
+            record.getValueType());
+      }
+    } else {
+      LOG.debug("[RDBMS Exporter] No registered handler found for {}", record.getValueType());
     }
 
     lastPosition = record.getPosition();
-    if (shouldFlush()) {
-      flush();
-      // Update the record counters only after the flush was successful. If the synchronous flush
-      // fails then the exporter will be invoked with the same record again.
-      updateLastExportedPosition();
-    }
-  }
-
-
-  private boolean shouldFlush() {
-    // FIXME should compare against both batch size and memory limit
-    return true;
-  }
-
-  private void scheduleDelayedFlush() {
-    controller.scheduleCancellableTask(Duration.ofSeconds(5), this::flushAndReschedule);
-  }
-
-  private void flushAndReschedule() {
-    try {
-      flush();
-      updateLastExportedPosition();
-    } catch (final Exception e) {
-      LOG.warn("Unexpected exception occurred on periodically flushing bulk, will retry later.", e);
-    }
-    scheduleDelayedFlush();
-  }
-
-  private void flush() {
-    LOG.debug("FLUSH IT!");
+    updateLastExportedPosition();
   }
 
   private void updateLastExportedPosition() {
     controller.updateLastExportedRecordPosition(lastPosition);
+  }
+
+  private void registerHandler() {
+    registeredHandlers.put(ValueType.PROCESS_INSTANCE_CREATION, new ProcessExportHandler(rdbmsService.getProcessRdbmsService()));
+    registeredHandlers.put(ValueType.VARIABLE, new VariableExportHandler(rdbmsService.getVariableRdbmsService()));
   }
 
 }

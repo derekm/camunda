@@ -5,9 +5,24 @@
  * Licensed under the Camunda License 1.0. You may not use this file
  * except in compliance with the Camunda License 1.0.
  */
-package io.camunda.exporter.rdbms.sql;
+package io.camunda.db.rdbms.sql;
 
-public class MapperHolder {
-  public static ProcessInstanceMapper PROCESS_INSTANCE_MAPPER;
+import io.camunda.db.rdbms.domain.VariableModel;
+import java.util.List;
 
+public interface VariableMapper {
+
+  void insert(VariableModel variable);
+
+  VariableModel findOne(Long key);
+
+  boolean exists(Long key);
+
+  List<VariableModel> find(VariableFilter filter);
+
+  record VariableFilter(
+      Long processInstanceKey
+  ) {
+
+  }
 }

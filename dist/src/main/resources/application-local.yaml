@@ -57,7 +57,7 @@ zeebe:
       logSegmentSize: 128MB
       # How often we take snapshots of streams (time unit)
       # This setting can also be overridden using the environment variable ZEEBE_BROKER_DATA_SNAPSHOTPERIOD.
-      snapshotPeriod: 15m
+      snapshotPeriod: 1m
 
     cluster:
       # Specifies the Zeebe cluster size.
@@ -84,6 +84,10 @@ zeebe:
     exporters:
       rdbms:
         className: io.camunda.exporter.rdbms.RdbmsExporter
+      #elasticsearch:
+      #  className: io.camunda.zeebe.exporter.ElasticsearchExporter
+      #  args:
+      #    url: http://localhost:9200
 
 camunda:
   database:
@@ -150,7 +154,10 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:h2:file:./camunda;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./camunda;AUTO_SERVER=TRUE
     username: sa
     password:
     driverClassName: org.h2.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*-mapper.xml

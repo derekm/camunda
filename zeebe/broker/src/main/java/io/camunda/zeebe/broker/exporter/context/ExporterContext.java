@@ -7,6 +7,7 @@
  */
 package io.camunda.zeebe.broker.exporter.context;
 
+import io.camunda.zeebe.broker.SpringBrokerBridge;
 import io.camunda.zeebe.exporter.api.context.Configuration;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -14,6 +15,7 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.util.EnsureUtil;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.time.InstantSource;
+import java.util.Optional;
 import org.slf4j.Logger;
 
 public final class ExporterContext implements Context {
