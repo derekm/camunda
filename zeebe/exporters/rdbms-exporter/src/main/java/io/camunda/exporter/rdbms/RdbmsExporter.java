@@ -88,7 +88,7 @@ public class RdbmsExporter implements Exporter {
   }
 
   private void registerHandler() {
-    registeredHandlers.put(ValueType.PROCESS_INSTANCE_CREATION, new ProcessExportHandler(rdbmsService.getProcessRdbmsService()));
+    registeredHandlers.put(ValueType.PROCESS_INSTANCE, new ProcessInstanceExportHandler(rdbmsService.getProcessRdbmsService()));
     registeredHandlers.put(ValueType.VARIABLE, new VariableExportHandler(rdbmsService.getVariableRdbmsService()));
   }
 
