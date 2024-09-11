@@ -8,6 +8,7 @@
 package io.camunda.qa.util.cluster;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
@@ -18,14 +19,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-public class TestRestOperateClient implements AutoCloseable, TestClient {
+public class TestRestV2ApiClient implements AutoCloseable, TestClient {
 
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final ObjectMapper OBJECT_MAPPER = (new ObjectMapper())
+      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
   private final URI endpoint;
   private final HttpClient httpClient;
 
-  public TestRestOperateClient(final URI endpoint) {
+  public TestRestV2ApiClient(final URI endpoint) {
     this.endpoint = endpoint;
 
     httpClient = HttpClient.newHttpClient();
@@ -36,7 +38,7 @@ public class TestRestOperateClient implements AutoCloseable, TestClient {
     try {
       request =
           HttpRequest.newBuilder()
-              .uri(new URI(String.format("%sv1/process-instances/search", endpoint)))
+              .uri(new URI(String.format("%sv2/process-instances/search", endpoint)))
               .header("content-type", "application/json")
               .POST(
                   HttpRequest.BodyPublishers.ofString(

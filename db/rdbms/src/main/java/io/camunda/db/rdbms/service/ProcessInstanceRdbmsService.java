@@ -16,8 +16,12 @@ import io.camunda.db.rdbms.sql.ProcessInstanceMapper;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProcessInstanceRdbmsService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ProcessInstanceRdbmsService.class);
 
   public record SearchResult(
       List<ProcessInstanceModel> hits,
@@ -61,10 +65,12 @@ public class ProcessInstanceRdbmsService {
   }
 
   public ProcessInstanceModel findOne(final Long processInstanceKey) {
+    LOG.trace("[RDBMS DB] Search for process instance with key {}", processInstanceKey);
     return processInstanceMapper.findOne(processInstanceKey);
   }
 
   public SearchResult search(ProcessInstanceFilter filter) {
+    LOG.trace("[RDBMS DB] Search for process instance with filter {}", filter);
     var totalHits = processInstanceMapper.count(filter);
     var hits = processInstanceMapper.search(
         filter,

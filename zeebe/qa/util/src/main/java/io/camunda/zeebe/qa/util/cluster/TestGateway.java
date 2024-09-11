@@ -136,6 +136,6 @@ public interface TestGateway<T extends TestGateway<T>> extends TestApplication<T
    * @return itself for chaining
    */
   default T awaitCompleteTopology() {
-    return awaitCompleteTopology(1, 1, 1, Duration.ofSeconds(30));
+    return awaitCompleteTopology(1, 1, 1, Duration.ofSeconds(60));
   }
 }

@@ -9,13 +9,17 @@
   </Appenders>
 
   <Loggers>
-    <Logger name="io.camunda.zeebe" level="debug"/>
+    <Logger name="io.camunda.zeebe" level="info"/>
+    <Logger name="io.camunda.exporter" level="debug"/>
+    <Logger name="io.camunda.search" level="debug"/>
+    <Logger name="io.camunda.db.rdbms" level="debug"/>
+    <Logger name="io.camunda.db.rdbms.sql" level="info"/>
     <Logger name="io.atomix" level="debug"/>
-    <Logger name="io.zeebe.containers.ZeebeTopologyWaitStrategy" level="trace"/>
+    <Logger name="io.zeebe.containers.ZeebeTopologyWaitStrategy" level="info"/>
 
     <Logger name="io.atomix.cluster.messaging" level="info"/>
-    <Logger name="io.atomix.cluster.protocol" level="debug"/>
-    <Logger name="io.atomix.raft" level="debug"/>
+    <Logger name="io.atomix.cluster.protocol" level="info"/>
+    <Logger name="io.atomix.raft" level="info"/>
 
     <Root level="info">
       <AppenderRef ref="Console"/>

@@ -27,8 +27,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RdbmsSearchClient implements CamundaSearchClient {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RdbmsSearchClient.class);
 
   private final RdbmsService rdbmsService;
 
@@ -39,6 +43,7 @@ public class RdbmsSearchClient implements CamundaSearchClient {
   @Override
   public <T> Either<Exception, SearchQueryResponse<T>> search(
       final SearchQueryRequest searchRequest, final Class<T> documentClass) {
+    LOG.trace("[RDBMS Search Client] Search for request: {}", searchRequest);
     if (searchRequest.index().stream().anyMatch(s -> s.startsWith("operate-list-view"))) {
       final var bpmnProcessId = getBpmnProcessId(searchRequest.query());
       final var variables = getVariables(searchRequest.query());
@@ -96,9 +101,9 @@ public class RdbmsSearchClient implements CamundaSearchClient {
   public Pair<String, List<String>> getVariables(final SearchQuery searchQuery) {
     if (searchQuery.queryOption() instanceof final SearchHasChildQuery searchHasChildQuery) {
       if (searchHasChildQuery.type().equalsIgnoreCase("variable")) {
-        var queryOption = ((SearchBoolQuery) searchHasChildQuery.query().queryOption()).must();
-        var varNameTerm = ((SearchTermQuery) queryOption.get(0).queryOption()).value().stringValue();
-        var varValueTerm = (queryOption.get(1).queryOption() instanceof SearchTermQuery) ? List.of(((SearchTermQuery) queryOption.get(1).queryOption()).value().stringValue())
+        final var queryOption = ((SearchBoolQuery) searchHasChildQuery.query().queryOption()).must();
+        final var varNameTerm = ((SearchTermQuery) queryOption.get(0).queryOption()).value().stringValue();
+        final var varValueTerm = (queryOption.get(1).queryOption() instanceof SearchTermQuery) ? List.of(((SearchTermQuery) queryOption.get(1).queryOption()).value().stringValue())
             : ((SearchTermsQuery) queryOption.get(1).queryOption()).values().stream().map(TypedValue::stringValue).toList();
 
         return Pair.of(varNameTerm, varValueTerm);
