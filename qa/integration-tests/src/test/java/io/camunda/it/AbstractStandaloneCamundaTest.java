@@ -58,8 +58,7 @@ abstract class AbstractStandaloneCamundaTest {
         .untilAsserted(
             () -> {
               final Either<Exception, ProcessInstanceResult> eitherProcessInstanceResult =
-                  testClient.getProcessInstanceWith(
-                      processInstanceEvent.getProcessInstanceKey());
+                  testClient.getProcessInstanceWith(processInstanceEvent.getProcessInstanceKey());
 
               // has no exception
               assertThat(eitherProcessInstanceResult.isRight())
@@ -70,7 +69,7 @@ abstract class AbstractStandaloneCamundaTest {
 
               // V2 returns a page instead of total
               long total = 0;
-              if(processInstanceResult.page() != null) {
+              if (processInstanceResult.page() != null) {
                 total = processInstanceResult.page().totalItems();
               } else {
                 total = processInstanceResult.total();

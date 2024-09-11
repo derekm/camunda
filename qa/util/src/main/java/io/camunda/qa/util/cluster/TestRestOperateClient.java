@@ -87,5 +87,4 @@ public class TestRestOperateClient implements AutoCloseable, TestClient {
   public void close() throws Exception {
     httpClient.close();
   }
-
 }

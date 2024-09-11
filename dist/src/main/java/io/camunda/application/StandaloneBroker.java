@@ -26,8 +26,7 @@ public class StandaloneBroker {
             .sources(
                 CommonsModuleConfiguration.class,
                 BrokerModuleConfiguration.class,
-                RdbmsConfiguration.class
-            )
+                RdbmsConfiguration.class)
             .profiles(Profile.BROKER.getId(), Profile.STANDALONE.getId())
             .initializers(new HealthConfigurationInitializer())
             .build(args);

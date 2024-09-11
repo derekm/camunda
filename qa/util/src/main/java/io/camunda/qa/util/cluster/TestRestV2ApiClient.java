@@ -21,8 +21,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 public class TestRestV2ApiClient implements AutoCloseable, TestClient {
 
-  private static final ObjectMapper OBJECT_MAPPER = (new ObjectMapper())
-      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  private static final ObjectMapper OBJECT_MAPPER =
+      (new ObjectMapper()).disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
   private final URI endpoint;
   private final HttpClient httpClient;
@@ -89,5 +89,4 @@ public class TestRestV2ApiClient implements AutoCloseable, TestClient {
   public void close() throws Exception {
     httpClient.close();
   }
-
 }

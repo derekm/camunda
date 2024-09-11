@@ -37,14 +37,14 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * This suite tests external exporters, that is, those loaded via a self-contained JAR. For thread
- * context class loader (TCL) tests, it will create a JAR which contains a subclass of
- * {@link TclExporter} called {@code com.acme.TestExporter}, which captures the TCL for every method
+ * context class loader (TCL) tests, it will create a JAR which contains a subclass of {@link
+ * TclExporter} called {@code com.acme.TestExporter}, which captures the TCL for every method
  * called.
  *
  * <p>To verify that the TCL is correctly set, we compare the captured TCL for each method with the
- * exporter class' class loader. When an external exporter is loaded, a new
- * {@link ExternalJarClassLoader} instance is created for it, and the exporter class has its class
- * loader property set to it. We can then compare the captured TCL with that.
+ * exporter class' class loader. When an external exporter is loaded, a new {@link
+ * ExternalJarClassLoader} instance is created for it, and the exporter class has its class loader
+ * property set to it. We can then compare the captured TCL with that.
  */
 @Execution(ExecutionMode.CONCURRENT)
 final class ExternalExporterContainerTest {
@@ -196,8 +196,7 @@ final class ExternalExporterContainerTest {
     }
 
     @Override
-    public void export(final Record<?> record) {
-    }
+    public void export(final Record<?> record) {}
   }
 
   // the class must be visible to the generated exporter for ByteBuddy to delegate method invocation

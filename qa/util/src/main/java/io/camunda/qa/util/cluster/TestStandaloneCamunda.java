@@ -47,9 +47,7 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
-/**
- * Represents an instance of the {@link BrokerModuleConfiguration} Spring application.
- */
+/** Represents an instance of the {@link BrokerModuleConfiguration} Spring application. */
 @SuppressWarnings("UnusedReturnValue")
 public final class TestStandaloneCamunda extends TestSpringApplication<TestStandaloneCamunda>
     implements TestGateway<TestStandaloneCamunda> {
@@ -60,18 +58,18 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
           .withTag(RestClient.class.getPackage().getImplementationVersion());
   private static final String RECORDING_EXPORTER_ID = "recordingExporter";
   private static final Class<?>[] DEFAULT_CLASSES = {
-      CommonsModuleConfiguration.class,
-      OperateModuleConfiguration.class,
-      TasklistModuleConfiguration.class,
-      WebappsModuleConfiguration.class,
-      BrokerModuleConfiguration.class,
-      DefaultObjectMapperConfiguration.class,
-      // test overrides - to control data clean up; (and some components are not installed on
-      // Tests)
-      TestOperateElasticsearchSchemaManager.class,
-      TestTasklistElasticsearchSchemaManager.class,
-      TestOperateSchemaStartup.class,
-      TestTasklistSchemaStartup.class
+    CommonsModuleConfiguration.class,
+    OperateModuleConfiguration.class,
+    TasklistModuleConfiguration.class,
+    WebappsModuleConfiguration.class,
+    BrokerModuleConfiguration.class,
+    DefaultObjectMapperConfiguration.class,
+    // test overrides - to control data clean up; (and some components are not installed on
+    // Tests)
+    TestOperateElasticsearchSchemaManager.class,
+    TestTasklistElasticsearchSchemaManager.class,
+    TestOperateSchemaStartup.class,
+    TestTasklistSchemaStartup.class
   };
 
   private final ElasticsearchContainer esContainer =
@@ -100,12 +98,7 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   public TestStandaloneCamunda(final Class<?>... additionalBeans) {
-    super(
-        ArrayUtils.addAll(
-            DEFAULT_CLASSES,
-            additionalBeans
-        )
-    );
+    super(ArrayUtils.addAll(DEFAULT_CLASSES, additionalBeans));
 
     brokerProperties = new BrokerBasedProperties();
 
@@ -136,9 +129,7 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   public static TestStandaloneCamunda withRdbms() {
-    return new TestStandaloneCamunda(
-        RdbmsConfiguration.class
-    ).setRdbmsEnabled(true);
+    return new TestStandaloneCamunda(RdbmsConfiguration.class).setRdbmsEnabled(true);
   }
 
   @Override
@@ -259,15 +250,14 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
     return TestGateway.super.newClientBuilder();
   }
 
-  /**
-   * Returns the broker configuration
-   */
+  /** Returns the broker configuration */
   public BrokerBasedProperties brokerConfig() {
     return brokerProperties;
   }
 
   /**
-   * Modifies the broker configuration. Will still mutate the configuration if the broker is started, but likely has no effect until it's restarted.
+   * Modifies the broker configuration. Will still mutate the configuration if the broker is
+   * started, but likely has no effect until it's restarted.
    */
   public TestStandaloneCamunda withBrokerConfig(final Consumer<BrokerBasedProperties> modifier) {
     modifier.accept(brokerProperties);
@@ -275,9 +265,11 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   /**
-   * Enables/disables usage of the recording exporter using {@link #RECORDING_EXPORTER_ID} as its unique ID.
+   * Enables/disables usage of the recording exporter using {@link #RECORDING_EXPORTER_ID} as its
+   * unique ID.
    *
-   * @param useRecordingExporter if true, will enable the exporter; if false, will remove it from the config
+   * @param useRecordingExporter if true, will enable the exporter; if false, will remove it from
+   *     the config
    * @return itself for chaining
    */
   public TestStandaloneCamunda withRecordingExporter(final boolean useRecordingExporter) {
@@ -291,7 +283,8 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   /**
-   * Adds or replaces a new exporter with the given ID. If it was already existing, the existing configuration is passed to the modifier. If it's new, a blank configuration is passed.
+   * Adds or replaces a new exporter with the given ID. If it was already existing, the existing
+   * configuration is passed to the modifier. If it's new, a blank configuration is passed.
    *
    * @param id the ID of the exporter
    * @param modifier a configuration function
@@ -306,7 +299,8 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   /**
-   * Sets the broker's working directory, aka its data directory. If a path is given, the broker will not delete it on shutdown.
+   * Sets the broker's working directory, aka its data directory. If a path is given, the broker
+   * will not delete it on shutdown.
    *
    * @param directory path to the broker's root data directory
    * @return itself for chaining

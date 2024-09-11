@@ -311,7 +311,8 @@ public final class ExporterDirector extends Actor implements HealthMonitorable, 
     }
 
     final ExporterContainer container =
-        new ExporterContainer(descriptor, partitionId, initializationInfo, meterRegistry, clock);
+        new ExporterContainer(
+            descriptor, partitionId, initializationInfo, meterRegistry, clock);
     container.initContainer(actor, metrics, state, exporterPhase);
     try {
       container.configureExporter();

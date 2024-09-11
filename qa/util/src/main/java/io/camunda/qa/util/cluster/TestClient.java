@@ -22,8 +22,8 @@ public interface TestClient {
       @JsonProperty("items") List<ProcessInstance> processInstances,
       @JsonProperty("total") long total, // V1 Property
       @JsonProperty("page") Page page) // V2 Property
-  { }
+  {}
 
   // Only in V2
-  record Page(@JsonProperty("totalItems") long totalItems) { }
+  record Page(@JsonProperty("totalItems") long totalItems) {}
 }

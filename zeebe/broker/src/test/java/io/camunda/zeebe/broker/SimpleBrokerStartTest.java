@@ -36,8 +36,7 @@ public final class SimpleBrokerStartTest {
 
   private static final SpringBrokerBridge TEST_SPRING_BROKER_BRIDGE = new SpringBrokerBridge(null);
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private File newTemporaryFolder;
 
   @Before

@@ -19,7 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Helper class that allows Spring beans to access information from the Broker code that is not managed by Spring as well as allowing broker to access Spring Beans
+ * Helper class that allows Spring beans to access information from the Broker code that is not
+ * managed by Spring as well as allowing broker to access Spring Beans
  */
 @Component
 public class SpringBrokerBridge {
@@ -80,7 +81,8 @@ public class SpringBrokerBridge {
   }
 
   /**
-   * Registers a shutdown helper that can initiate a graceful shutdown of the broker. This will be used when any exceptional cases may need to be handled by shutting down the broker.
+   * Registers a shutdown helper that can initiate a graceful shutdown of the broker. This will be
+   * used when any exceptional cases may need to be handled by shutting down the broker.
    *
    * @param shutdownHelper the shutdown helper
    */

@@ -48,7 +48,7 @@
       <outputDirectory></outputDirectory>
     </file>
     <file>
-      <source>src/README.txt</source>
+      <source>src/README.md</source>
       <filtered>true</filtered>
       <lineEnding>crlf</lineEnding>
       <outputDirectory></outputDirectory>

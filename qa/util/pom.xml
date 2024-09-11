@@ -47,6 +47,11 @@
 
     <dependency>
       <groupId>io.camunda</groupId>
+      <artifactId>camunda-db-rdbms</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.camunda</groupId>
       <artifactId>zeebe-broker</artifactId>
     </dependency>
 
@@ -120,6 +125,10 @@
     <dependency>
       <groupId>io.camunda</groupId>
       <artifactId>tasklist-els-schema</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
   </dependencies>
 </project>

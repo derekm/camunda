@@ -21,9 +21,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import java.time.InstantSource;
 import org.slf4j.Logger;
 
-/**
- * Encapsulates context associated with the exporter on open.
- */
+/** Encapsulates context associated with the exporter on open. */
 public interface Context {
 
   MeterRegistry getMeterRegistry();
@@ -64,9 +62,7 @@ public interface Context {
    */
   void setFilter(RecordFilter filter);
 
-  /**
-   * A filter to limit the records which are exported.
-   */
+  /** A filter to limit the records which are exported. */
   interface RecordFilter {
 
     /**

@@ -88,12 +88,10 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void notifyListenersOfBecameRaftLeader(final long newTerm) {
-  }
+  public void notifyListenersOfBecameRaftLeader(final long newTerm) {}
 
   @Override
-  public void notifyListenersOfBecameRaftFollower(final long newTerm) {
-  }
+  public void notifyListenersOfBecameRaftFollower(final long newTerm) {}
 
   @Override
   public List<ActorFuture<Void>> notifyListenersOfBecomingLeader(final long newTerm) {
@@ -106,8 +104,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void notifyListenersOfBecomingInactive() {
-  }
+  public void notifyListenersOfBecomingInactive() {}
 
   @Override
   public Role getCurrentRole() {
@@ -140,8 +137,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void setDiskSpaceAvailable(final boolean b) {
-  }
+  public void setDiskSpaceAvailable(final boolean b) {}
 
   @Override
   public TopologyManager getTopologyManager() {
@@ -154,8 +150,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void setAdminApiRequestHandler(final AdminApiRequestHandler handler) {
-  }
+  public void setAdminApiRequestHandler(final AdminApiRequestHandler handler) {}
 
   @Override
   public PartitionAdminAccess getAdminAccess() {
@@ -163,8 +158,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void setAdminAccess(final PartitionAdminAccess adminAccess) {
-  }
+  public void setAdminAccess(final PartitionAdminAccess adminAccess) {}
 
   @Override
   public DynamicPartitionConfig getDynamicPartitionConfig() {
@@ -222,8 +216,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public void setPartitionCommandSender(final InterPartitionCommandSenderService sender) {
-  }
+  public void setPartitionCommandSender(final InterPartitionCommandSenderService sender) {}
 
   @Override
   public ExporterPhase getExporterPhase() {
