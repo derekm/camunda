@@ -14,8 +14,15 @@ import io.camunda.db.rdbms.queue.ExecutionQueue;
 import io.camunda.db.rdbms.queue.QueueItem;
 import io.camunda.db.rdbms.sql.ProcessInstanceMapper;
 import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.session.RowBounds;
 
 public class ProcessInstanceRdbmsService {
+
+  public record SearchResult(
+      List<ProcessInstanceModel> hits,
+      Integer total
+  ) {}
 
   private final ExecutionQueue executionQueue;
   private final ProcessInstanceMapper processInstanceMapper;
@@ -43,12 +50,31 @@ public class ProcessInstanceRdbmsService {
     ));
   }
 
+  public void updateCurrentElementId(final long processInstanceKey, final String elementId) {
+    executionQueue.executeInQueue(new QueueItem(
+        ContextType.PROCESS_INSTANCE,
+        processInstanceKey,
+        "io.camunda.db.rdbms.sql.ProcessInstanceMapper.updateCurrentElementId",
+        Map.of("processInstanceKey", processInstanceKey,
+            "elementId", elementId)
+    ));
+  }
+
   public ProcessInstanceModel findOne(final Long processInstanceKey) {
     return processInstanceMapper.findOne(processInstanceKey);
   }
 
-  public List<ProcessInstanceModel> search(ProcessInstanceFilter filter) {
-    return processInstanceMapper.search(filter);
+  public SearchResult search(ProcessInstanceFilter filter) {
+    var totalHits = processInstanceMapper.count(filter);
+    var hits = processInstanceMapper.search(
+        filter,
+        new RowBounds(
+            filter.offset() != null ? filter.offset() : RowBounds.NO_ROW_OFFSET,
+            filter.limit() != null ? filter.limit() : RowBounds.NO_ROW_LIMIT
+        )
+    );
+
+    return new SearchResult(hits, totalHits);
   }
 
 }

@@ -23,7 +23,9 @@ import io.camunda.search.clients.query.SearchTermsQuery;
 import io.camunda.search.clients.types.TypedValue;
 import io.camunda.service.entities.ProcessInstanceEntity;
 import io.camunda.zeebe.util.Either;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RdbmsSearchClient implements CamundaSearchClient {
@@ -40,20 +42,22 @@ public class RdbmsSearchClient implements CamundaSearchClient {
     if (searchRequest.index().stream().anyMatch(s -> s.startsWith("operate-list-view"))) {
       final var bpmnProcessId = getBpmnProcessId(searchRequest.query());
       final var variables = getVariables(searchRequest.query());
-      final var processInstances = rdbmsService.getProcessInstanceRdbmsService().search(new ProcessInstanceFilter(
+      final var searchResult = rdbmsService.getProcessInstanceRdbmsService().search(new ProcessInstanceFilter(
           bpmnProcessId,
-          variables != null ? new VariableFilter(variables.getLeft(), variables.getRight()) : null
+          variables != null ? new VariableFilter(variables.getLeft(), variables.getRight()) : null,
+          searchRequest.size(),
+          searchRequest.from()
       ));
 
-      return Either.right(new SearchQueryResponse(1, "bla",
-          processInstances.stream().map(pi ->
+      return Either.right(new SearchQueryResponse(searchResult.total(), null,
+          searchResult.hits().stream().map(pi ->
               new SearchQueryHit.Builder()
                   .source(new ProcessInstanceEntity(
                       pi.processInstanceKey(),
                       rdbmsService.getProcessDeploymentRdbmsService().findOne(pi.processDefinitionKey(), pi.version()).map(ProcessDefinitionModel::bpmnProcessId).orElse(pi.bpmnProcessId()),
                       pi.version(), pi.bpmnProcessId(),
                       pi.parentProcessInstanceKey(), pi.parentElementInstanceKey(), pi.startDate().toString(),
-                      null, pi.state().name(), null,
+                      Optional.ofNullable(pi.endDate()).map(OffsetDateTime::toString).orElse(null), pi.state().name(), null,
                       null, pi.processDefinitionKey(), pi.tenantId(),
                       null, null, null
                   ))
