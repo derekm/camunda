@@ -11,6 +11,7 @@ import io.camunda.search.DocumentCamundaSearchClient;
 import io.camunda.search.SearchClientBasedQueryExecutor;
 import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.search.clients.core.SearchQueryRequest;
+import io.camunda.search.clients.core.SearchQueryRequest.Builder;
 import io.camunda.search.clients.core.SearchQueryResponse;
 import io.camunda.search.os.transformers.OpensearchTransformers;
 import io.camunda.search.os.transformers.search.SearchResponseTransformer;
@@ -18,7 +19,9 @@ import io.camunda.search.transformers.SearchTransfomer;
 import io.camunda.search.transformers.ServiceTransformers;
 import io.camunda.service.entities.AuthorizationEntity;
 import io.camunda.service.entities.DecisionDefinitionEntity;
+import io.camunda.service.entities.DecisionInstanceEntity;
 import io.camunda.service.entities.DecisionRequirementsEntity;
+import io.camunda.service.entities.FlowNodeInstanceEntity;
 import io.camunda.service.entities.IncidentEntity;
 import io.camunda.service.entities.ProcessInstanceEntity;
 import io.camunda.service.entities.UserEntity;
@@ -26,7 +29,9 @@ import io.camunda.service.entities.UserTaskEntity;
 import io.camunda.service.entities.VariableEntity;
 import io.camunda.service.search.query.AuthorizationQuery;
 import io.camunda.service.search.query.DecisionDefinitionQuery;
+import io.camunda.service.search.query.DecisionInstanceQuery;
 import io.camunda.service.search.query.DecisionRequirementsQuery;
+import io.camunda.service.search.query.FlowNodeInstanceQuery;
 import io.camunda.service.search.query.IncidentQuery;
 import io.camunda.service.search.query.ProcessInstanceQuery;
 import io.camunda.service.search.query.SearchQueryResult;
@@ -34,8 +39,10 @@ import io.camunda.service.search.query.UserQuery;
 import io.camunda.service.search.query.UserTaskQuery;
 import io.camunda.service.search.query.VariableQuery;
 import io.camunda.service.security.auth.Authentication;
+import io.camunda.util.ObjectBuilder;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
+import java.util.function.Function;
 import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.opensearch._types.OpenSearchException;
 import org.opensearch.client.opensearch.core.SearchRequest;
@@ -72,6 +79,12 @@ public final class OpensearchSearchClient implements DocumentCamundaSearchClient
       return Either.left(e);
     }
   }
+
+  @Override
+  public <T> Either<Exception, SearchQueryResponse<T>> search(final Function<Builder, ObjectBuilder<SearchQueryRequest>> fn, final Class<T> documentClass) {
+    return DocumentCamundaSearchClient.super.search(fn, documentClass);
+  }
+
   @Override
   public Either<Exception, SearchQueryResult<AuthorizationEntity>> searchAuthorizations(final AuthorizationQuery filter, final Authentication authentication) {
     final var executor = new SearchClientBasedQueryExecutor(this, ServiceTransformers.newInstance(), authentication);
@@ -85,9 +98,21 @@ public final class OpensearchSearchClient implements DocumentCamundaSearchClient
   }
 
   @Override
+  public Either<Exception, SearchQueryResult<DecisionInstanceEntity>> searchDecisionInstances(final DecisionInstanceQuery filter, final Authentication authentication) {
+    final var executor = new SearchClientBasedQueryExecutor(this, ServiceTransformers.newInstance(), authentication);
+    return executor.search(filter, DecisionInstanceEntity.class);
+  }
+
+  @Override
   public Either<Exception, SearchQueryResult<DecisionRequirementsEntity>> searchDecisionRequirements(final DecisionRequirementsQuery filter, final Authentication authentication) {
     final var executor = new SearchClientBasedQueryExecutor(this, ServiceTransformers.newInstance(), authentication);
     return executor.search(filter, DecisionRequirementsEntity.class);
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<FlowNodeInstanceEntity>> searchFlowNodeInstances(final FlowNodeInstanceQuery filter, final Authentication authentication) {
+    final var executor = new SearchClientBasedQueryExecutor(this, ServiceTransformers.newInstance(), authentication);
+    return executor.search(filter, FlowNodeInstanceEntity.class);
   }
 
   @Override

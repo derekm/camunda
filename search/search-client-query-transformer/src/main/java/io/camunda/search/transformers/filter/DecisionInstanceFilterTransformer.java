@@ -5,7 +5,7 @@
  * Licensed under the Camunda License 1.0. You may not use this file
  * except in compliance with the Camunda License 1.0.
  */
-package io.camunda.service.transformers.filter;
+package io.camunda.search.transformers.filter;
 
 import static io.camunda.search.clients.query.SearchQueryBuilders.and;
 import static io.camunda.search.clients.query.SearchQueryBuilders.intTerms;
@@ -17,8 +17,8 @@ import io.camunda.service.entities.DecisionInstanceEntity.DecisionInstanceState;
 import io.camunda.service.entities.DecisionInstanceEntity.DecisionType;
 import io.camunda.service.search.filter.DateValueFilter;
 import io.camunda.service.search.filter.DecisionInstanceFilter;
-import io.camunda.service.transformers.ServiceTransformers;
-import io.camunda.service.transformers.filter.DateValueFilterTransformer.DateFieldFilter;
+import io.camunda.search.transformers.ServiceTransformers;
+import io.camunda.search.transformers.filter.DateValueFilterTransformer.DateFieldFilter;
 import java.util.List;
 
 public final class DecisionInstanceFilterTransformer

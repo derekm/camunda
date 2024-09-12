@@ -14,7 +14,6 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@Disabled
 class MariaDbRdbmsExporterITest extends RdbmsExporterITest {
 
   @Container @ServiceConnection

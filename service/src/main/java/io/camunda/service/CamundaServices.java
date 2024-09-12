@@ -56,7 +56,7 @@ public final class CamundaServices extends ApiServices<CamundaServices> {
   }
 
   public FlowNodeInstanceServices flownodeInstanceServices() {
-    return new FlowNodeInstanceServices(brokerClient, searchClient, transformers, authentication);
+    return new FlowNodeInstanceServices(brokerClient, searchClient, authentication);
   }
 
   public UserServices userServices() {

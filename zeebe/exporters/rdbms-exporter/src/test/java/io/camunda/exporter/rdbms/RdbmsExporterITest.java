@@ -114,6 +114,7 @@ class RdbmsExporterITest {
             ImmutableProcessInstanceRecordValue.builder()
                 .from((ProcessInstanceRecordValue) recordValueRecord.getValue())
                 .withBpmnElementType(BpmnElementType.PROCESS)
+                .withVersion(1)
                 .build())
         .build();
   }

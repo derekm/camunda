@@ -16,7 +16,9 @@ import io.camunda.search.clients.core.SearchQueryRequest;
 import io.camunda.search.clients.core.SearchQueryResponse;
 import io.camunda.service.entities.AuthorizationEntity;
 import io.camunda.service.entities.DecisionDefinitionEntity;
+import io.camunda.service.entities.DecisionInstanceEntity;
 import io.camunda.service.entities.DecisionRequirementsEntity;
+import io.camunda.service.entities.FlowNodeInstanceEntity;
 import io.camunda.service.entities.IncidentEntity;
 import io.camunda.service.entities.ProcessInstanceEntity;
 import io.camunda.service.entities.UserEntity;
@@ -24,7 +26,9 @@ import io.camunda.service.entities.UserTaskEntity;
 import io.camunda.service.entities.VariableEntity;
 import io.camunda.service.search.query.AuthorizationQuery;
 import io.camunda.service.search.query.DecisionDefinitionQuery;
+import io.camunda.service.search.query.DecisionInstanceQuery;
 import io.camunda.service.search.query.DecisionRequirementsQuery;
+import io.camunda.service.search.query.FlowNodeInstanceQuery;
 import io.camunda.service.search.query.IncidentQuery;
 import io.camunda.service.search.query.ProcessInstanceQuery;
 import io.camunda.service.search.query.SearchQueryResult;
@@ -59,7 +63,17 @@ public class RdbmsSearchClient implements CamundaSearchClient {
   }
 
   @Override
+  public Either<Exception, SearchQueryResult<DecisionInstanceEntity>> searchDecisionInstances(final DecisionInstanceQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
   public Either<Exception, SearchQueryResult<DecisionRequirementsEntity>> searchDecisionRequirements(final DecisionRequirementsQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<FlowNodeInstanceEntity>> searchFlowNodeInstances(final FlowNodeInstanceQuery filter, final Authentication authentication) {
     return null;
   }
 

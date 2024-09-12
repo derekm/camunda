@@ -10,8 +10,8 @@ package io.camunda.service.query.sort;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.core.SearchQueryRequest;
-import io.camunda.search.clients.sort.SearchSortOptions;
-import io.camunda.search.clients.sort.SortOrder;
+import io.camunda.service.search.sort.SearchSortOptions;
+import io.camunda.service.search.sort.SortOrder;
 import io.camunda.service.DecisionInstanceServices;
 import io.camunda.service.query.filter.DecisionInstanceSearchQueryStub;
 import io.camunda.service.search.query.SearchQueryBuilders;
