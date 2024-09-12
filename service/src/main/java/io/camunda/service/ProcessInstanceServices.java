@@ -9,12 +9,12 @@ package io.camunda.service;
 
 import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.service.entities.ProcessInstanceEntity;
+import io.camunda.service.exception.SearchQueryExecutionException;
 import io.camunda.service.search.core.SearchQueryService;
 import io.camunda.service.search.query.ProcessInstanceQuery;
 import io.camunda.service.search.query.SearchQueryBuilders;
 import io.camunda.service.search.query.SearchQueryResult;
 import io.camunda.service.security.auth.Authentication;
-import io.camunda.service.transformers.ServiceTransformers;
 import io.camunda.util.ObjectBuilder;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerCancelProcessInstanceRequest;
@@ -41,26 +41,26 @@ public final class ProcessInstanceServices
         ProcessInstanceServices, ProcessInstanceQuery, ProcessInstanceEntity> {
 
   public ProcessInstanceServices(
-      final BrokerClient brokerClient, final CamundaSearchClient dataStoreClient) {
-    this(brokerClient, dataStoreClient, null, null);
-  }
-
-  public ProcessInstanceServices(
       final BrokerClient brokerClient,
       final CamundaSearchClient searchClient,
-      final ServiceTransformers transformers,
       final Authentication authentication) {
-    super(brokerClient, searchClient, transformers, authentication);
+    super(brokerClient, searchClient, authentication);
   }
 
   @Override
   public ProcessInstanceServices withAuthentication(final Authentication authentication) {
-    return new ProcessInstanceServices(brokerClient, searchClient, transformers, authentication);
+    return new ProcessInstanceServices(brokerClient, searchClient, authentication);
   }
 
   @Override
   public SearchQueryResult<ProcessInstanceEntity> search(final ProcessInstanceQuery query) {
-    return executor.search(query, ProcessInstanceEntity.class);
+    return searchClient
+        .searchProcessInstances(query, authentication)
+        .fold(
+            (e) -> {
+              throw new SearchQueryExecutionException("Failed to execute search query", e);
+            },
+            (r) -> r);
   }
 
   public SearchQueryResult<ProcessInstanceEntity> search(

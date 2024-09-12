@@ -27,7 +27,7 @@ public final class IncidentFilterTest {
   public void before() {
     client = new StubbedCamundaSearchClient();
     new IncidentSearchQueryStub().registerWith(client);
-    services = new IncidentServices(null, client, null, null);
+    services = new IncidentServices(null, client, null);
   }
 
   @Test

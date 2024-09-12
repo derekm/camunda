@@ -55,6 +55,6 @@ public class ProcessRdbmsService {
       }
     }
 
-    return Optional.empty();
+    return Optional.ofNullable(CACHE.get(Pair.of(processDefinitionKey, version)));
   }
 }

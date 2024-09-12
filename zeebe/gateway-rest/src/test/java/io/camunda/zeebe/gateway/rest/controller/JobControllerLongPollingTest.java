@@ -358,7 +358,7 @@ public class JobControllerLongPollingTest extends RestControllerTest {
     public JobServices<JobActivationResponse> jobServices(
         final BrokerClient brokerClient,
         final ActivateJobsHandler<JobActivationResponse> activateJobsHandler) {
-      return new JobServices<>(brokerClient, activateJobsHandler, null);
+      return new JobServices<>(brokerClient, activateJobsHandler, null, null);
     }
   }
 }

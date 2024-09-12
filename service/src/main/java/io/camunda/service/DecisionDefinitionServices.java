@@ -14,11 +14,11 @@ import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.service.entities.DecisionDefinitionEntity;
 import io.camunda.service.entities.DecisionRequirementsEntity;
 import io.camunda.service.exception.NotFoundException;
+import io.camunda.service.exception.SearchQueryExecutionException;
 import io.camunda.service.search.core.SearchQueryService;
 import io.camunda.service.search.query.DecisionDefinitionQuery;
 import io.camunda.service.search.query.SearchQueryResult;
 import io.camunda.service.security.auth.Authentication;
-import io.camunda.service.transformers.ServiceTransformers;
 import io.camunda.util.ObjectBuilder;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.broker.client.api.dto.BrokerResponse;
@@ -33,26 +33,26 @@ public final class DecisionDefinitionServices
         DecisionDefinitionServices, DecisionDefinitionQuery, DecisionDefinitionEntity> {
 
   public DecisionDefinitionServices(
-      final BrokerClient brokerClient, final CamundaSearchClient dataStoreClient) {
-    this(brokerClient, dataStoreClient, null, null);
-  }
-
-  public DecisionDefinitionServices(
       final BrokerClient brokerClient,
       final CamundaSearchClient searchClient,
-      final ServiceTransformers transformers,
       final Authentication authentication) {
-    super(brokerClient, searchClient, transformers, authentication);
+    super(brokerClient, searchClient, authentication);
   }
 
   @Override
   public DecisionDefinitionServices withAuthentication(final Authentication authentication) {
-    return new DecisionDefinitionServices(brokerClient, searchClient, transformers, authentication);
+    return new DecisionDefinitionServices(brokerClient, searchClient, authentication);
   }
 
   @Override
   public SearchQueryResult<DecisionDefinitionEntity> search(final DecisionDefinitionQuery query) {
-    return executor.search(query, DecisionDefinitionEntity.class);
+    return searchClient
+        .searchDecisionDefinitions(query, authentication)
+        .fold(
+            (e) -> {
+              throw new SearchQueryExecutionException("Failed to execute search query", e);
+            },
+            (r) -> r);
   }
 
   public SearchQueryResult<DecisionDefinitionEntity> search(
@@ -78,8 +78,7 @@ public final class DecisionDefinitionServices
             q ->
                 q.filter(f -> f.decisionRequirementsKeys(decisionRequirementsKey))
                     .resultConfig(r -> r.xml().include()));
-    return executor
-        .search(decisionRequirementsQuery, DecisionRequirementsEntity.class)
+    return searchClient.searchDecisionRequirements(decisionRequirementsQuery, authentication).get()
         .items()
         .stream()
         .findFirst()

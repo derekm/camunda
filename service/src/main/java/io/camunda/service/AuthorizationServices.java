@@ -9,11 +9,11 @@ package io.camunda.service;
 
 import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.service.entities.AuthorizationEntity;
+import io.camunda.service.exception.SearchQueryExecutionException;
 import io.camunda.service.search.core.SearchQueryService;
 import io.camunda.service.search.query.AuthorizationQuery;
 import io.camunda.service.search.query.SearchQueryResult;
 import io.camunda.service.security.auth.Authentication;
-import io.camunda.service.transformers.ServiceTransformers;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerAuthorizationPatchRequest;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
@@ -28,26 +28,26 @@ public class AuthorizationServices<T>
     extends SearchQueryService<AuthorizationServices<T>, AuthorizationQuery, AuthorizationEntity> {
 
   public AuthorizationServices(
-      final BrokerClient brokerClient, final CamundaSearchClient dataStoreClient) {
-    this(brokerClient, dataStoreClient, null, null);
-  }
-
-  public AuthorizationServices(
       final BrokerClient brokerClient,
       final CamundaSearchClient searchClient,
-      final ServiceTransformers transformers,
       final Authentication authentication) {
-    super(brokerClient, searchClient, transformers, authentication);
+    super(brokerClient, searchClient, authentication);
   }
 
   @Override
   public AuthorizationServices<T> withAuthentication(final Authentication authentication) {
-    return new AuthorizationServices<>(brokerClient, searchClient, transformers, authentication);
+    return new AuthorizationServices<>(brokerClient, searchClient, authentication);
   }
 
   @Override
   public SearchQueryResult<AuthorizationEntity> search(final AuthorizationQuery query) {
-    return executor.search(query, AuthorizationEntity.class);
+    return searchClient
+        .searchAuthorizations(query, authentication)
+        .fold(
+            (e) -> {
+              throw new SearchQueryExecutionException("Failed to execute search query", e);
+            },
+            (r) -> r);
   }
 
   public CompletableFuture<AuthorizationRecord> patchAuthorization(

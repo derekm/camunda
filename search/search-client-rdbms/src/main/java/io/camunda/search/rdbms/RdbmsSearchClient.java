@@ -12,21 +12,29 @@ import io.camunda.db.rdbms.domain.ProcessDefinitionModel;
 import io.camunda.db.rdbms.domain.ProcessInstanceFilter;
 import io.camunda.db.rdbms.domain.ProcessInstanceFilter.VariableFilter;
 import io.camunda.search.clients.CamundaSearchClient;
-import io.camunda.search.clients.core.SearchQueryHit;
 import io.camunda.search.clients.core.SearchQueryRequest;
 import io.camunda.search.clients.core.SearchQueryResponse;
-import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchHasChildQuery;
-import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.search.clients.query.SearchTermQuery;
-import io.camunda.search.clients.query.SearchTermsQuery;
-import io.camunda.search.clients.types.TypedValue;
+import io.camunda.service.entities.AuthorizationEntity;
+import io.camunda.service.entities.DecisionDefinitionEntity;
+import io.camunda.service.entities.DecisionRequirementsEntity;
+import io.camunda.service.entities.IncidentEntity;
 import io.camunda.service.entities.ProcessInstanceEntity;
+import io.camunda.service.entities.UserEntity;
+import io.camunda.service.entities.UserTaskEntity;
+import io.camunda.service.entities.VariableEntity;
+import io.camunda.service.search.query.AuthorizationQuery;
+import io.camunda.service.search.query.DecisionDefinitionQuery;
+import io.camunda.service.search.query.DecisionRequirementsQuery;
+import io.camunda.service.search.query.IncidentQuery;
+import io.camunda.service.search.query.ProcessInstanceQuery;
+import io.camunda.service.search.query.SearchQueryResult;
+import io.camunda.service.search.query.UserQuery;
+import io.camunda.service.search.query.UserTaskQuery;
+import io.camunda.service.search.query.VariableQuery;
+import io.camunda.service.security.auth.Authentication;
 import io.camunda.zeebe.util.Either;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,112 +49,68 @@ public class RdbmsSearchClient implements CamundaSearchClient {
   }
 
   @Override
-  public <T> Either<Exception, SearchQueryResponse<T>> search(
-      final SearchQueryRequest searchRequest, final Class<T> documentClass) {
-    LOG.trace("[RDBMS Search Client] Search for request: {}", searchRequest);
-    if (searchRequest.index().stream().anyMatch(s -> s.startsWith("operate-list-view"))) {
-      final var bpmnProcessId = getBpmnProcessId(searchRequest.query());
-      final var variables = getVariables(searchRequest.query());
-      final var searchResult =
-          rdbmsService
-              .getProcessInstanceRdbmsService()
-              .search(
-                  new ProcessInstanceFilter(
-                      bpmnProcessId,
-                      variables != null
-                          ? new VariableFilter(variables.getLeft(), variables.getRight())
-                          : null,
-                      searchRequest.size(),
-                      searchRequest.from()));
-
-      return Either.right(
-          new SearchQueryResponse(
-              searchResult.total(),
-              null,
-              searchResult.hits().stream()
-                  .map(
-                      pi ->
-                          new SearchQueryHit.Builder()
-                              .source(
-                                  new ProcessInstanceEntity(
-                                      pi.processInstanceKey(),
-                                      rdbmsService
-                                          .getProcessDeploymentRdbmsService()
-                                          .findOne(pi.processDefinitionKey(), pi.version())
-                                          .map(ProcessDefinitionModel::bpmnProcessId)
-                                          .orElse(pi.bpmnProcessId()),
-                                      pi.version(),
-                                      pi.bpmnProcessId(),
-                                      pi.parentProcessInstanceKey(),
-                                      pi.parentElementInstanceKey(),
-                                      pi.startDate().toString(),
-                                      Optional.ofNullable(pi.endDate())
-                                          .map(OffsetDateTime::toString)
-                                          .orElse(null),
-                                      pi.state().name(),
-                                      null,
-                                      null,
-                                      pi.processDefinitionKey(),
-                                      pi.tenantId(),
-                                      null,
-                                      null,
-                                      null))
-                              .build())
-                  .toList()));
-    }
-
+  public Either<Exception, SearchQueryResult<AuthorizationEntity>> searchAuthorizations(final AuthorizationQuery filter, final Authentication authentication) {
     return null;
   }
 
   @Override
-  public void close() throws Exception {}
-
-  public String getBpmnProcessId(final SearchQuery searchQuery) {
-    if (searchQuery.queryOption() instanceof final SearchTermQuery searchTermQuery) {
-      if (searchTermQuery.field().equalsIgnoreCase("bpmnProcessId")) {
-        return searchTermQuery.value().stringValue();
-      } else {
-        return null;
-      }
-    } else if (searchQuery.queryOption() instanceof final SearchBoolQuery searchBoolQuery) {
-      for (final SearchQuery sq : searchBoolQuery.must()) {
-        final var term = getBpmnProcessId(sq);
-        if (term != null) {
-          return term;
-        }
-      }
-    }
-
+  public Either<Exception, SearchQueryResult<DecisionDefinitionEntity>> searchDecisionDefinitions(final DecisionDefinitionQuery filter, final Authentication authentication) {
     return null;
   }
 
-  public Pair<String, List<String>> getVariables(final SearchQuery searchQuery) {
-    if (searchQuery.queryOption() instanceof final SearchHasChildQuery searchHasChildQuery) {
-      if (searchHasChildQuery.type().equalsIgnoreCase("variable")) {
-        final var queryOption =
-            ((SearchBoolQuery) searchHasChildQuery.query().queryOption()).must();
-        final var varNameTerm =
-            ((SearchTermQuery) queryOption.get(0).queryOption()).value().stringValue();
-        final var varValueTerm =
-            (queryOption.get(1).queryOption() instanceof SearchTermQuery)
-                ? List.of(
-                    ((SearchTermQuery) queryOption.get(1).queryOption()).value().stringValue())
-                : ((SearchTermsQuery) queryOption.get(1).queryOption())
-                    .values().stream().map(TypedValue::stringValue).toList();
-
-        return Pair.of(varNameTerm, varValueTerm);
-      } else {
-        return null;
-      }
-    } else if (searchQuery.queryOption() instanceof final SearchBoolQuery searchBoolQuery) {
-      for (final SearchQuery sq : searchBoolQuery.must()) {
-        final var term = getVariables(sq);
-        if (term != null) {
-          return term;
-        }
-      }
-    }
-
+  @Override
+  public Either<Exception, SearchQueryResult<DecisionRequirementsEntity>> searchDecisionRequirements(final DecisionRequirementsQuery filter, final Authentication authentication) {
     return null;
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<IncidentEntity>> searchIncidents(final IncidentQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<ProcessInstanceEntity>> searchProcessInstances(final ProcessInstanceQuery query, final Authentication authentication) {
+    LOG.debug("[RDBMS Search Client] Search for processInstance: {}", query);
+
+    final var searchResult = rdbmsService.getProcessInstanceRdbmsService().search(new ProcessInstanceFilter(
+        (query.filter().bpmnProcessIds().isEmpty()) ? null : query.filter().bpmnProcessIds().getFirst(),
+        query.filter().variable() != null ? new VariableFilter(query.filter().variable().name(), query.filter().variable().values()) : null,
+        query.page().size(),
+        query.page().from()
+    ));
+
+    return Either.right(new SearchQueryResult<>(searchResult.total(),
+        searchResult.hits().stream().map(pi ->
+            new ProcessInstanceEntity(
+                pi.processInstanceKey(),
+                rdbmsService.getProcessDeploymentRdbmsService().findOne(pi.processDefinitionKey(), pi.version()).map(ProcessDefinitionModel::name).orElse(pi.bpmnProcessId()),
+                pi.version(), pi.bpmnProcessId(),
+                pi.parentProcessInstanceKey(), pi.parentElementInstanceKey(), pi.startDate().toString(),
+                Optional.ofNullable(pi.endDate()).map(OffsetDateTime::toString).orElse(null), pi.state().name(), null,
+                null, pi.processDefinitionKey(), pi.tenantId(),
+                null, null, null
+            )
+        ).toList(),
+        null
+    ));
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<UserEntity>> searchUsers(final UserQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<UserTaskEntity>> searchUserTasks(final UserTaskQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
+  public Either<Exception, SearchQueryResult<VariableEntity>> searchVariables(final VariableQuery filter, final Authentication authentication) {
+    return null;
+  }
+
+  @Override
+  public void close() throws Exception {
   }
 }

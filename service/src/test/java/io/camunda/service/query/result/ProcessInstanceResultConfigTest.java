@@ -25,7 +25,7 @@ public class ProcessInstanceResultConfigTest {
   public void before() {
     client = new StubbedCamundaSearchClient();
     new ProcessInstanceSearchQueryStub().registerWith(client);
-    services = new ProcessInstanceServices(null, client);
+    services = new ProcessInstanceServices(null, client, null);
   }
 
   @Test
