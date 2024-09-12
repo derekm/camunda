@@ -9,7 +9,10 @@ package io.camunda.service.query.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.search.clients.query.*;
+import io.camunda.search.clients.query.SearchBoolQuery;
+import io.camunda.search.clients.query.SearchQueryOption;
+import io.camunda.search.clients.query.SearchRangeQuery;
+import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.service.ProcessInstanceServices;
 import io.camunda.service.entities.ProcessInstanceEntity;
 import io.camunda.service.search.filter.FilterBuilders;
@@ -33,7 +36,7 @@ public final class ProcessInstanceFilterTest {
   public void before() {
     client = new StubbedCamundaSearchClient();
     new ProcessInstanceSearchQueryStub().registerWith(client);
-    services = new ProcessInstanceServices(null, client);
+    services = new ProcessInstanceServices(null, client, null);
   }
 
   @Test
@@ -489,7 +492,8 @@ public final class ProcessInstanceFilterTest {
   }
 
   private void assertIsSearchTermQuery(
-      SearchQueryOption searchQueryOption, String expectedField, String expectedValue) {
+      final SearchQueryOption searchQueryOption, final String expectedField,
+      final String expectedValue) {
     assertThat(searchQueryOption)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -500,7 +504,8 @@ public final class ProcessInstanceFilterTest {
   }
 
   private void assertIsSearchTermQuery(
-      SearchQueryOption searchQueryOption, String expectedField, Long expectedValue) {
+      final SearchQueryOption searchQueryOption, final String expectedField,
+      final Long expectedValue) {
     assertThat(searchQueryOption)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -511,7 +516,8 @@ public final class ProcessInstanceFilterTest {
   }
 
   private void assertIsSearchTermQuery(
-      SearchQueryOption searchQueryOption, String expectedField, Integer expectedValue) {
+      final SearchQueryOption searchQueryOption, final String expectedField,
+      final Integer expectedValue) {
     assertThat(searchQueryOption)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -522,7 +528,8 @@ public final class ProcessInstanceFilterTest {
   }
 
   private void assertIsSearchTermQuery(
-      SearchQueryOption searchQueryOption, String expectedField, Boolean expectedValue) {
+      final SearchQueryOption searchQueryOption, final String expectedField,
+      final Boolean expectedValue) {
     assertThat(searchQueryOption)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
