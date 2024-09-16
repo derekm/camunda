@@ -10,7 +10,6 @@ package io.camunda.search.os.clients;
 import io.camunda.search.DocumentCamundaSearchClient;
 import io.camunda.search.SearchClientBasedQueryExecutor;
 import io.camunda.search.clients.AuthorizationSearchClient;
-import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.search.clients.DecisionDefinitionSearchClient;
 import io.camunda.search.clients.DecisionInstanceSearchClient;
 import io.camunda.search.clients.DecisionRequirementSearchClient;

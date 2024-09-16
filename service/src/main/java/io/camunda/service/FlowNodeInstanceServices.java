@@ -7,7 +7,6 @@
  */
 package io.camunda.service;
 
-import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.search.clients.FlowNodeInstanceSearchClient;
 import io.camunda.service.entities.FlowNodeInstanceEntity;
 import io.camunda.service.exception.SearchQueryExecutionException;
