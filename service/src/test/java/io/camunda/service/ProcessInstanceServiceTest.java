@@ -36,7 +36,7 @@ public final class ProcessInstanceServiceTest {
   @Test
   public void shouldReturnProcessInstance() {
     // given
-    var result = mock(SearchQueryResult.class);
+    final var result = mock(SearchQueryResult.class);
     when(client.searchProcessInstances(any(), any())).thenReturn(Either.right(result));
 
     final ProcessInstanceQuery searchQuery =

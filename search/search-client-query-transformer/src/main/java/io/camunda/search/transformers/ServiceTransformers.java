@@ -9,8 +9,25 @@ package io.camunda.search.transformers;
 
 import io.camunda.search.clients.core.SearchQueryRequest;
 import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.transformers.filter.AuthenticationTransformer;
+import io.camunda.search.transformers.filter.AuthorizationFilterTransformer;
+import io.camunda.search.transformers.filter.ComparableValueFilterTransformer;
+import io.camunda.search.transformers.filter.DateValueFilterTransformer;
+import io.camunda.search.transformers.filter.DecisionDefinitionFilterTransformer;
 import io.camunda.search.transformers.filter.DecisionInstanceFilterTransformer;
+import io.camunda.search.transformers.filter.DecisionRequirementsFilterTransformer;
+import io.camunda.search.transformers.filter.FilterTransformer;
 import io.camunda.search.transformers.filter.FlownodeInstanceFilterTransformer;
+import io.camunda.search.transformers.filter.IncidentFilterTransformer;
+import io.camunda.search.transformers.filter.ProcessInstanceFilterTransformer;
+import io.camunda.search.transformers.filter.UserFilterTransformer;
+import io.camunda.search.transformers.filter.UserTaskFilterTransformer;
+import io.camunda.search.transformers.filter.VariableFilterTransformer;
+import io.camunda.search.transformers.filter.VariableValueFilterTransformer;
+import io.camunda.search.transformers.query.SearchQueryResultTransformer;
+import io.camunda.search.transformers.query.TypedSearchQueryTransformer;
+import io.camunda.search.transformers.result.ResultConfigTransformer;
+import io.camunda.search.transformers.sort.FieldSortingTransformer;
 import io.camunda.service.search.filter.AuthorizationFilter;
 import io.camunda.service.search.filter.ComparableValueFilter;
 import io.camunda.service.search.filter.DateValueFilter;
@@ -41,30 +58,13 @@ import io.camunda.service.search.result.QueryResultConfig;
 import io.camunda.service.search.sort.FlowNodeInstanceSort;
 import io.camunda.service.search.sort.SortOption;
 import io.camunda.service.security.auth.Authentication;
-
-import io.camunda.search.transformers.filter.AuthenticationTransformer;
-import io.camunda.search.transformers.filter.AuthorizationFilterTransformer;
-import io.camunda.search.transformers.filter.ComparableValueFilterTransformer;
-import io.camunda.search.transformers.filter.DateValueFilterTransformer;
-import io.camunda.search.transformers.filter.DecisionDefinitionFilterTransformer;
-import io.camunda.search.transformers.filter.DecisionRequirementsFilterTransformer;
-import io.camunda.search.transformers.filter.FilterTransformer;
-import io.camunda.search.transformers.filter.IncidentFilterTransformer;
-import io.camunda.search.transformers.filter.ProcessInstanceFilterTransformer;
-import io.camunda.search.transformers.filter.UserFilterTransformer;
-import io.camunda.search.transformers.filter.UserTaskFilterTransformer;
-import io.camunda.search.transformers.filter.VariableFilterTransformer;
-import io.camunda.search.transformers.filter.VariableValueFilterTransformer;
-import io.camunda.search.transformers.query.SearchQueryResultTransformer;
-import io.camunda.search.transformers.query.TypedSearchQueryTransformer;
-import io.camunda.search.transformers.result.ResultConfigTransformer;
-import io.camunda.search.transformers.sort.FieldSortingTransformer;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ServiceTransformers {
 
-  private final Map<Class<?>, io.camunda.search.transformers.ServiceTransformer<?, ?>> transformers = new HashMap<>();
+  private final Map<Class<?>, io.camunda.search.transformers.ServiceTransformer<?, ?>>
+      transformers = new HashMap<>();
 
   private ServiceTransformers() {}
 

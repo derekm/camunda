@@ -38,12 +38,12 @@ public class DecisionDefinitionSortTest extends AbstractSortTransformerTest {
   @ParameterizedTest
   @MethodSource("provideSortParameters")
   public void shouldSortByField(
-      String field,
-      SortOrder sortOrder,
-      Function<DecisionDefinitionSort.Builder, ObjectBuilder<DecisionDefinitionSort>> fn) {
+      final String field,
+      final SortOrder sortOrder,
+      final Function<DecisionDefinitionSort.Builder, ObjectBuilder<DecisionDefinitionSort>> fn) {
     // when
-    var request = SearchQueryBuilders.decisionDefinitionSearchQuery(q -> q.sort(fn));
-    var sort = transformRequest(request);
+    final var request = SearchQueryBuilders.decisionDefinitionSearchQuery(q -> q.sort(fn));
+    final var sort = transformRequest(request);
 
     // then
     assertThat(sort).hasSize(2);

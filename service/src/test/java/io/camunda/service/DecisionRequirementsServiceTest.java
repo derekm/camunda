@@ -40,7 +40,7 @@ public final class DecisionRequirementsServiceTest {
         SearchQueryBuilders.decisionRequirementsSearchQuery().build();
 
     // when
-    var result = mock(SearchQueryResult.class);
+    final var result = mock(SearchQueryResult.class);
     when(client.searchDecisionRequirements(any(), any())).thenReturn(Either.right(result));
     final SearchQueryResult<DecisionRequirementsEntity> searchQueryResult =
         services.search(searchQuery);

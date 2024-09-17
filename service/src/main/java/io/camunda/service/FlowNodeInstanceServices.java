@@ -35,7 +35,8 @@ public final class FlowNodeInstanceServices
 
   @Override
   public FlowNodeInstanceServices withAuthentication(final Authentication authentication) {
-    return new FlowNodeInstanceServices(brokerClient, this.flowNodeInstanceSearchClient, authentication);
+    return new FlowNodeInstanceServices(
+        brokerClient, this.flowNodeInstanceSearchClient, authentication);
   }
 
   @Override

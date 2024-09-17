@@ -347,6 +347,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
         "processInstance");
     assertIsSearchTermQuery(
         ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "state", "ACTIVE");
+
   }
 
   @Test

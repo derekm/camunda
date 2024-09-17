@@ -5,14 +5,16 @@
  * Licensed under the Camunda License 1.0. You may not use this file
  * except in compliance with the Camunda License 1.0.
  */
-package io.camunda.search.transformers.filter;import static org.assertj.core.api.Assertions.assertThat;
+package io.camunda.search.transformers.filter;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.query.SearchBoolQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.service.search.filter.FilterBuilders;
 import org.junit.jupiter.api.Test;
 
-public final class DecisionRequirementsQueryTransformerTest extends AbstractTransformerTest{
+public final class DecisionRequirementsQueryTransformerTest extends AbstractTransformerTest {
 
   @Test
   public void shouldQueryByDecisionRequirementsKey() {
@@ -21,7 +23,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
         FilterBuilders.decisionRequirements(f -> f.decisionRequirementsKeys(124L));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
@@ -40,7 +42,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
     final var decisionRequirementFilter = FilterBuilders.decisionRequirements(f -> f.versions(1));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
@@ -60,7 +62,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
         FilterBuilders.decisionRequirements(f -> f.tenantIds("t"));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
@@ -80,7 +82,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
         FilterBuilders.decisionRequirements(f -> f.dmnDecisionRequirementsIds("dId"));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
@@ -100,7 +102,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
         FilterBuilders.decisionRequirements(f -> f.dmnDecisionRequirementsNames("n"));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
@@ -120,7 +122,7 @@ public final class DecisionRequirementsQueryTransformerTest extends AbstractTran
         FilterBuilders.decisionRequirements(f -> f.dmnDecisionRequirementsNames("n").versions(1));
 
     // when
-    var searchRequest = transformQuery(decisionRequirementFilter);
+    final var searchRequest = transformQuery(decisionRequirementFilter);
 
     // then
     final var queryVariant = searchRequest.queryOption();
