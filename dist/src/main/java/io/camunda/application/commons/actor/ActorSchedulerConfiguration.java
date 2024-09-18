@@ -37,7 +37,7 @@ public final class ActorSchedulerConfiguration {
     final var cpuThreads = schedulerConfiguration.cpuThreads();
     final var ioThreads = schedulerConfiguration.ioThreads();
     final var metricsEnabled = schedulerConfiguration.metricsEnabled();
-    final var prefix = schedulerConfiguration.prefix();
+    final var prefix = schedulerConfiguration.prefix(); // TODO: get Broker|Gateway here
     final var nodeId = schedulerConfiguration.nodeId();
 
     final var scheduler =

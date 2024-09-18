@@ -346,7 +346,8 @@ public class ClusteringRule extends ExternalResource {
 
     final var scheduler =
         new ActorSchedulerConfiguration(
-                brokerSpringConfig.schedulerConfiguration(),
+                brokerSpringConfig
+                    .schedulerConfiguration(), // TODO: Pick this to know it's a Broker
                 IdleStrategySupplier.ofDefault(),
                 actorClockConfiguration)
             .scheduler();
@@ -471,7 +472,9 @@ public class ClusteringRule extends ExternalResource {
 
     final ActorScheduler actorScheduler =
         new ActorSchedulerConfiguration(
-                actorConfig, IdleStrategySupplier.ofDefault(), actorClockConfiguration)
+                actorConfig,
+                IdleStrategySupplier.ofDefault(),
+                actorClockConfiguration) // TODO: Pick this to know it's a Gateway
             .scheduler();
 
     final var clusterConfiguration = new AtomixClusterConfiguration(clusterConfig);
@@ -578,6 +581,7 @@ public class ClusteringRule extends ExternalResource {
     brokers.forEach(this::stopBroker);
     brokers.forEach(this::getBroker);
     try {
+
       startBrokers().join();
       waitForTopology(
           assertion -> assertion.isComplete(clusterSize, partitionCount, replicationFactor));

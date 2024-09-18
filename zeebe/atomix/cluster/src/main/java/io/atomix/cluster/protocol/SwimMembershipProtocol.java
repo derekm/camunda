@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.atomix.cluster.BootstrapService;
-import io.atomix.cluster.ClusterMemberContext;
 import io.atomix.cluster.Member;
 import io.atomix.cluster.MemberId;
 import io.atomix.cluster.Node;
@@ -63,6 +62,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /** SWIM group membership protocol implementation. */
 public class SwimMembershipProtocol
@@ -103,8 +103,10 @@ public class SwimMembershipProtocol
   private final ScheduledExecutorService swimScheduler =
       Executors.newSingleThreadScheduledExecutor(
           namedThreads("atomix-cluster-heartbeat-sender", LOGGER));
+
   private final ExecutorService eventExecutor =
       Executors.newSingleThreadExecutor(namedThreads("atomix-cluster-events", LOGGER));
+
   private final AtomicInteger probeCounter = new AtomicInteger();
   private NodeDiscoveryService discoveryService;
   private BootstrapService bootstrapService;
@@ -117,7 +119,6 @@ public class SwimMembershipProtocol
   private ScheduledFuture<?> gossipFuture;
   private ScheduledFuture<?> probeFuture;
   private ScheduledFuture<?> syncFuture;
-  private ClusterMemberContext clusterMemberContext;
   private final BiFunction<Address, byte[], byte[]> syncHandler =
       (address, payload) -> SERIALIZER.encode(handleSync(SERIALIZER.decode(payload)));
   private final BiFunction<Address, byte[], byte[]> probeHandler =
@@ -184,7 +185,11 @@ public class SwimMembershipProtocol
 
       registerHandlers();
 
-      clusterMemberContext = new ClusterMemberContext("Broker", localMember.id(), GOSSIP_LOGGER);
+      //      clusterMemberContext = new ClusterMemberContext("Broker", localMember.id(),
+      // GOSSIP_LOGGER);
+      //      MDC.put("actor-scheduler", "join-Broker-1231");
+      swimScheduler.execute(
+          () -> MDC.put("actor-scheduler", "SwimScheduler-Broker-" + member.id()));
 
       scheduleGossip();
       scheduleProbe();
@@ -781,14 +786,8 @@ public class SwimMembershipProtocol
    * @param updates the updated members to gossip
    */
   private void gossip(final SwimMember member, final Collection<ImmutableMember> updates) {
-
-    //    GOSSIP_LOGGER.trace("{} - Gossipping updates {} to {}", localMember.id(), updates,
-    // member);
-    clusterMemberContext.execute(
-        () -> {
-          GOSSIP_LOGGER.trace(
-              "{} - Gossipping updates {} to {}", localMember.id(), updates, member);
-        });
+    GOSSIP_LOGGER.trace(
+        "{} - Gossipping updates {} to {}", MDC.get("actor-scheduler"), updates, member);
     bootstrapService
         .getUnicastService()
         .unicast(member.address(), MEMBERSHIP_GOSSIP, SERIALIZER.encode(updates));
@@ -797,11 +796,7 @@ public class SwimMembershipProtocol
   /** Handles a gossip message from a peer. */
   private void handleGossipUpdates(final Collection<ImmutableMember> updates) {
     for (final ImmutableMember update : updates) {
-      clusterMemberContext.execute(
-          () -> {
-            GOSSIP_LOGGER.trace("{} - Received gossip {}", localMember.id(), update);
-          });
-      //      GOSSIP_LOGGER.trace("{} - Received gossip {}", localMember.id(), update);
+      GOSSIP_LOGGER.trace("{} - Received gossip {}", MDC.get("actor-scheduler"), update);
       updateState(update);
     }
   }
