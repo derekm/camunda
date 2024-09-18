@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
-public class RdbmsConfiguration {
+public class RdbmsDBConfiguration {
 
   @Bean
   public MultiTenantSpringLiquibase customerLiquibase(final DataSource dataSource) {

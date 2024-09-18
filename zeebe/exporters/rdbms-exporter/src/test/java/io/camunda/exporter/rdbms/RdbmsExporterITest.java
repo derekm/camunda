@@ -39,14 +39,16 @@ class RdbmsExporterITest {
 
   private final ExporterTestController controller = new ExporterTestController();
 
-  private final RdbmsExporter exporter = new RdbmsExporter();
 
   private final ProtocolFactory factory = new ProtocolFactory();
 
   @Autowired private RdbmsService rdbmsService;
 
+  private RdbmsExporter exporter;
+
   @BeforeEach
   void setUp() {
+    exporter = new RdbmsExporter(rdbmsService);
     exporter.configure(
         new ExporterContext(null, null, 0, null, null));
     exporter.open(controller);

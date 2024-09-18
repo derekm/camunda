@@ -9,7 +9,6 @@ package io.camunda.application;
 
 import io.camunda.application.commons.CommonsModuleConfiguration;
 import io.camunda.application.initializers.HealthConfigurationInitializer;
-import io.camunda.db.rdbms.RdbmsConfiguration;
 import io.camunda.zeebe.broker.BrokerModuleConfiguration;
 import org.springframework.boot.SpringBootConfiguration;
 
@@ -25,8 +24,7 @@ public class StandaloneBroker {
         MainSupport.createDefaultApplicationBuilder()
             .sources(
                 CommonsModuleConfiguration.class,
-                BrokerModuleConfiguration.class,
-                RdbmsConfiguration.class)
+                BrokerModuleConfiguration.class)
             .profiles(Profile.BROKER.getId(), Profile.STANDALONE.getId())
             .initializers(new HealthConfigurationInitializer())
             .build(args);

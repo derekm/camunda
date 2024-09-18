@@ -14,7 +14,7 @@ import io.camunda.application.commons.configuration.BrokerBasedConfiguration.Bro
 import io.camunda.application.commons.configuration.WorkingDirectoryConfiguration.WorkingDirectory;
 import io.camunda.application.initializers.WebappsConfigurationInitializer;
 import io.camunda.application.sources.DefaultObjectMapperConfiguration;
-import io.camunda.db.rdbms.RdbmsConfiguration;
+import io.camunda.db.rdbms.RdbmsDBConfiguration;
 import io.camunda.operate.OperateModuleConfiguration;
 import io.camunda.operate.property.OperateProperties;
 import io.camunda.tasklist.TasklistModuleConfiguration;
@@ -129,7 +129,7 @@ public final class TestStandaloneCamunda extends TestSpringApplication<TestStand
   }
 
   public static TestStandaloneCamunda withRdbms() {
-    return new TestStandaloneCamunda(RdbmsConfiguration.class).setRdbmsEnabled(true);
+    return new TestStandaloneCamunda(RdbmsDBConfiguration.class).setRdbmsEnabled(true);
   }
 
   @Override

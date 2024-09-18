@@ -31,11 +31,15 @@ public class RdbmsExporter implements Exporter {
   private final HashMap<ValueType, RdbmsExportHandler> registeredHandlers = new HashMap<>();
 
   private Controller controller;
-  private RdbmsService rdbmsService;
+  private final RdbmsService rdbmsService;
 
   private long partitionId;
   private ExporterPositionModel exporterRdbmsPosition;
   private long lastPosition = -1;
+
+  public RdbmsExporter(final RdbmsService rdbmsService) {
+    this.rdbmsService = rdbmsService;
+  }
 
   @Override
   public void configure(final Context context) {

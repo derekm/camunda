@@ -62,7 +62,7 @@ public final class SimpleBrokerStartTest {
                       mock(ActorScheduler.class),
                       mock(AtomixCluster.class),
                       mock(BrokerClient.class));
-              new Broker(systemContext, TEST_SPRING_BROKER_BRIDGE);
+              new Broker(systemContext, TEST_SPRING_BROKER_BRIDGE, Collections.emptyList());
             });
 
     // then
