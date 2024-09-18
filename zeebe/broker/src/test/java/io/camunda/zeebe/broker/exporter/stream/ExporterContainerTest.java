@@ -120,7 +120,7 @@ final class ExporterContainerTest {
       runtime = new ExporterContainerRuntime(storagePath);
 
       final var descriptor =
-          runtime.getRepository().load(EXPORTER_ID, FakeExporter.class, Map.of("key", "value"));
+          runtime.getRepository().validateAndAddExporterDescriptor(EXPORTER_ID, FakeExporter.class, Map.of("key", "value"), null);
       exporterContainer = runtime.newContainer(descriptor, PARTITION_ID);
       exporter = (FakeExporter) exporterContainer.getExporter();
     }
@@ -553,7 +553,7 @@ final class ExporterContainerTest {
       runtime = new ExporterContainerRuntime(storagePath);
 
       descriptor =
-          runtime.getRepository().load(EXPORTER_ID, FakeExporter.class, Map.of("key", "value"));
+          runtime.getRepository().validateAndAddExporterDescriptor(EXPORTER_ID, FakeExporter.class, Map.of("key", "value"), null);
     }
 
     @Test
@@ -694,8 +694,8 @@ final class ExporterContainerTest {
       descriptor =
           runtime
               .getRepository()
-              .load(
-                  "fakeExporterWithMetrics", FakeExporterWithMetrics.class, Map.of("key", "value"));
+              .validateAndAddExporterDescriptor(
+                  "fakeExporterWithMetrics", FakeExporterWithMetrics.class, Map.of("key", "value"), null);
 
       final var meterRegistry = new SimpleMeterRegistry();
       exporterContainer =

@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.camunda.zeebe.broker.exporter.util.ControlledTestExporter;
 import io.camunda.zeebe.broker.exporter.util.ExternalExporter;
+import io.camunda.zeebe.broker.exporter.util.TestExporterFactory;
 import io.camunda.zeebe.broker.system.configuration.ExporterCfg;
 import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
@@ -21,6 +22,7 @@ import io.camunda.zeebe.util.jar.ExternalJarLoadException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.bytebuddy.ByteBuddy;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,7 @@ final class ExporterRepositoryTest {
     final var exporterClass = MinimalExporter.class;
 
     // when
-    final var descriptor = repository.load(id, exporterClass, null);
+    final var descriptor = repository.validateAndAddExporterDescriptor(id, exporterClass, null, null);
 
     // then
     assertThat(descriptor).isNotNull();
@@ -63,6 +65,27 @@ final class ExporterRepositoryTest {
     // given
     final var config = new ExporterCfg();
     config.setClassName(ControlledTestExporter.class.getCanonicalName());
+    config.setJarPath(null);
+
+    // when
+    final var descriptor = repository.load("controlled", config);
+
+    // then
+    assertThat(config.isExternal()).isFalse();
+    assertThat(descriptor.newInstance()).isInstanceOf(ControlledTestExporter.class);
+  }
+
+  @Test
+  void shouldLoadInternalExporterUsingExporterFactory() throws ExporterLoadException, ExternalJarLoadException {
+    // GIVEN we have factories
+    final List<ExporterFactory> factories = List.of(
+        new TestExporterFactory()
+    );
+    final ExporterRepository repository = new ExporterRepository(factories);
+
+    // AND our config
+    final var config = new ExporterCfg();
+    config.setClassName("not used");
     config.setJarPath(null);
 
     // when
