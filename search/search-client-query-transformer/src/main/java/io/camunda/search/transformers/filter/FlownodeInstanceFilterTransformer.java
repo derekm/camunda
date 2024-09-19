@@ -13,7 +13,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 import static io.camunda.search.clients.query.SearchQueryBuilders.term;
 
 import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.service.search.filter.FlowNodeInstanceFilter;
+import io.camunda.search.filter.FlowNodeInstanceFilter;
 import java.util.List;
 
 public class FlownodeInstanceFilterTransformer

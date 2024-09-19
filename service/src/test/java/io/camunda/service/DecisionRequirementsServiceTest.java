@@ -13,12 +13,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import io.camunda.search.clients.DecisionRequirementSearchClient;
-import io.camunda.service.entities.DecisionRequirementsEntity;
-import io.camunda.service.search.query.DecisionRequirementsQuery;
-import io.camunda.service.search.query.SearchQueryBuilders;
-import io.camunda.service.search.query.SearchQueryResult;
+import io.camunda.search.entities.DecisionRequirementsEntity;
+import io.camunda.search.query.DecisionRequirementsQuery;
+import io.camunda.search.query.SearchQueryBuilders;
+import io.camunda.search.query.SearchQueryResult;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
-import io.camunda.zeebe.util.Either;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +40,7 @@ public final class DecisionRequirementsServiceTest {
 
     // when
     final var result = mock(SearchQueryResult.class);
-    when(client.searchDecisionRequirements(any(), any())).thenReturn(Either.right(result));
+    when(client.searchDecisionRequirements(any(), any())).thenReturn(result);
     final SearchQueryResult<DecisionRequirementsEntity> searchQueryResult =
         services.search(searchQuery);
 

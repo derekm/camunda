@@ -12,10 +12,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.camunda.search.security.auth.Authentication;
 import io.camunda.service.ResourceServices;
 import io.camunda.service.ResourceServices.DeployResourcesRequest;
 import io.camunda.service.ResourceServices.ResourceDeletionRequest;
-import io.camunda.service.security.auth.Authentication;
 import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.resource.ResourceDeletionRecord;
@@ -92,22 +92,22 @@ public class ResourceControllerTest extends RestControllerTest {
         .expectBody()
         .json(
             """
-          {
-             "key":123,
-             "deployments":[
-                {
-                   "process":{
-                      "bpmnProcessId":"processId",
-                      "version":1,
-                      "processDefinitionKey":123456,
-                      "resourceName":"process.bpmn",
-                      "tenantId":"<default>"
-                   }
-                }
-             ],
-             "tenantId":"<default>"
-          }
-         """);
+                 {
+                    "key":123,
+                    "deployments":[
+                       {
+                          "process":{
+                             "bpmnProcessId":"processId",
+                             "version":1,
+                             "processDefinitionKey":123456,
+                             "resourceName":"process.bpmn",
+                             "tenantId":"<default>"
+                          }
+                       }
+                    ],
+                    "tenantId":"<default>"
+                 }
+                """);
   }
 
   @Test
@@ -184,40 +184,40 @@ public class ResourceControllerTest extends RestControllerTest {
         .expectBody()
         .json(
             """
-          {
-             "key":123,
-             "deployments":[
-                {
-                   "process":{
-                      "bpmnProcessId":"processId",
-                      "version":1,
-                      "processDefinitionKey":123456,
-                      "resourceName":"process.bpmn",
-                      "tenantId":"<default>"
-                   }
-                },
-                {
-                   "process":{
-                      "bpmnProcessId":"secondProcessId",
-                      "version":1,
-                      "processDefinitionKey":7890123,
-                      "resourceName":"second.bpmn",
-                      "tenantId":"<default>"
-                   }
-                },
-                {
-                   "form":{
-                      "formId":"formId",
-                      "version":1,
-                      "formKey":123456,
-                      "resourceName":"process.bpmn",
-                      "tenantId":"<default>"
-                   }
-                }
-             ],
-             "tenantId":"<default>"
-          }
-         """);
+                 {
+                    "key":123,
+                    "deployments":[
+                       {
+                          "process":{
+                             "bpmnProcessId":"processId",
+                             "version":1,
+                             "processDefinitionKey":123456,
+                             "resourceName":"process.bpmn",
+                             "tenantId":"<default>"
+                          }
+                       },
+                       {
+                          "process":{
+                             "bpmnProcessId":"secondProcessId",
+                             "version":1,
+                             "processDefinitionKey":7890123,
+                             "resourceName":"second.bpmn",
+                             "tenantId":"<default>"
+                          }
+                       },
+                       {
+                          "form":{
+                             "formId":"formId",
+                             "version":1,
+                             "formKey":123456,
+                             "resourceName":"process.bpmn",
+                             "tenantId":"<default>"
+                          }
+                       }
+                    ],
+                    "tenantId":"<default>"
+                 }
+                """);
   }
 
   @Test
@@ -245,9 +245,9 @@ public class ResourceControllerTest extends RestControllerTest {
 
     final var request =
         """
-        {
-          "operationReference": 123
-        }""";
+            {
+              "operationReference": 123
+            }""";
 
     // when/then
     webClient
@@ -296,7 +296,7 @@ public class ResourceControllerTest extends RestControllerTest {
 
     final var request =
         """
-        {}""";
+            {}""";
 
     // when/then
     webClient
@@ -320,19 +320,19 @@ public class ResourceControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-          "operationReference": -123
-        }""";
+            {
+              "operationReference": -123
+            }""";
 
     final var expectedBody =
         """
-        {
-            "type":"about:blank",
-            "title":"INVALID_ARGUMENT",
-            "status":400,
-            "detail":"The value for operationReference is '-123' but must be > 0.",
-            "instance":"/v2/resources/1/deletion"
-         }""";
+            {
+                "type":"about:blank",
+                "title":"INVALID_ARGUMENT",
+                "status":400,
+                "detail":"The value for operationReference is '-123' but must be > 0.",
+                "instance":"/v2/resources/1/deletion"
+             }""";
 
     // when / then
     webClient

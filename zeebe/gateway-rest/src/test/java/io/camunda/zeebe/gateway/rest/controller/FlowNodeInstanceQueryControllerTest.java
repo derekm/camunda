@@ -11,12 +11,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.camunda.search.entities.FlowNodeInstanceEntity;
+import io.camunda.search.query.FlowNodeInstanceQuery;
+import io.camunda.search.query.SearchQueryResult;
+import io.camunda.search.query.SearchQueryResult.Builder;
+import io.camunda.search.security.auth.Authentication;
 import io.camunda.service.FlowNodeInstanceServices;
-import io.camunda.service.entities.FlowNodeInstanceEntity;
-import io.camunda.service.search.query.FlowNodeInstanceQuery;
-import io.camunda.service.search.query.SearchQueryResult;
-import io.camunda.service.search.query.SearchQueryResult.Builder;
-import io.camunda.service.security.auth.Authentication;
 import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,18 +32,18 @@ public class FlowNodeInstanceQueryControllerTest extends RestControllerTest {
 
   static final String EXPECTED_SEARCH_RESPONSE =
       """
-      {
-          "items": [
-              {}
-          ],
-          "page": {
-              "totalItems": 1,
-              "firstSortValues": [],
-              "lastSortValues": [
-                  "v"
-              ]
-          }
-      }""";
+          {
+              "items": [
+                  {}
+              ],
+              "page": {
+                  "totalItems": 1,
+                  "firstSortValues": [],
+                  "lastSortValues": [
+                      "v"
+                  ]
+              }
+          }""";
 
   static final SearchQueryResult<FlowNodeInstanceEntity> SEARCH_QUERY_RESULT =
       new Builder<FlowNodeInstanceEntity>()

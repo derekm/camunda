@@ -9,9 +9,9 @@ package io.camunda.zeebe.gateway.rest.controller;
 
 import static io.camunda.zeebe.gateway.rest.Loggers.REST_LOGGER;
 
+import io.camunda.search.exception.NotFoundException;
+import io.camunda.search.query.DecisionDefinitionQuery;
 import io.camunda.service.DecisionDefinitionServices;
-import io.camunda.service.exception.NotFoundException;
-import io.camunda.service.search.query.DecisionDefinitionQuery;
 import io.camunda.zeebe.gateway.protocol.rest.DecisionDefinitionSearchQueryRequest;
 import io.camunda.zeebe.gateway.protocol.rest.DecisionDefinitionSearchQueryResponse;
 import io.camunda.zeebe.gateway.rest.RequestMapper;

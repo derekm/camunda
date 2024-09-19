@@ -8,13 +8,12 @@
 package io.camunda.service;
 
 import io.camunda.search.clients.FlowNodeInstanceSearchClient;
-import io.camunda.service.entities.FlowNodeInstanceEntity;
-import io.camunda.service.exception.SearchQueryExecutionException;
+import io.camunda.search.entities.FlowNodeInstanceEntity;
+import io.camunda.search.query.FlowNodeInstanceQuery;
+import io.camunda.search.query.SearchQueryBuilders;
+import io.camunda.search.query.SearchQueryResult;
+import io.camunda.search.security.auth.Authentication;
 import io.camunda.service.search.core.SearchQueryService;
-import io.camunda.service.search.query.FlowNodeInstanceQuery;
-import io.camunda.service.search.query.SearchQueryBuilders;
-import io.camunda.service.search.query.SearchQueryResult;
-import io.camunda.service.security.auth.Authentication;
 import io.camunda.util.ObjectBuilder;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import java.util.function.Function;
@@ -35,19 +34,12 @@ public final class FlowNodeInstanceServices
 
   @Override
   public FlowNodeInstanceServices withAuthentication(final Authentication authentication) {
-    return new FlowNodeInstanceServices(
-        brokerClient, this.flowNodeInstanceSearchClient, authentication);
+    return new FlowNodeInstanceServices(brokerClient, flowNodeInstanceSearchClient, authentication);
   }
 
   @Override
   public SearchQueryResult<FlowNodeInstanceEntity> search(final FlowNodeInstanceQuery query) {
-    return flowNodeInstanceSearchClient
-        .searchFlowNodeInstances(query, authentication)
-        .fold(
-            (e) -> {
-              throw new SearchQueryExecutionException("Failed to execute search query", e);
-            },
-            (r) -> r);
+    return flowNodeInstanceSearchClient.searchFlowNodeInstances(query, authentication);
   }
 
   public SearchQueryResult<FlowNodeInstanceEntity> search(

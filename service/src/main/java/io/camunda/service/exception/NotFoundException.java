@@ -7,11 +7,11 @@
  */
 package io.camunda.service.exception;
 
-import io.camunda.service.CamundaServiceException;
+import io.camunda.search.CamundaSearchException;
 
-public class NotFoundException extends CamundaServiceException {
+public class NotFoundException extends CamundaSearchException {
 
-  public NotFoundException(String message) {
+  public NotFoundException(final String message) {
     super(message);
   }
 }

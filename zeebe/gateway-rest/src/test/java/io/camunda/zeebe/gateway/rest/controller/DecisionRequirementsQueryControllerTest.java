@@ -12,14 +12,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.camunda.search.entities.DecisionRequirementsEntity;
+import io.camunda.search.filter.DecisionRequirementsFilter;
+import io.camunda.search.query.DecisionRequirementsQuery;
+import io.camunda.search.query.SearchQueryResult;
+import io.camunda.search.query.SearchQueryResult.Builder;
+import io.camunda.search.security.auth.Authentication;
+import io.camunda.search.sort.DecisionRequirementsSort;
 import io.camunda.service.DecisionRequirementsServices;
-import io.camunda.service.entities.DecisionRequirementsEntity;
-import io.camunda.service.search.filter.DecisionRequirementsFilter;
-import io.camunda.service.search.query.DecisionRequirementsQuery;
-import io.camunda.service.search.query.SearchQueryResult;
-import io.camunda.service.search.query.SearchQueryResult.Builder;
-import io.camunda.service.search.sort.DecisionRequirementsSort;
-import io.camunda.service.security.auth.Authentication;
 import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,25 +35,25 @@ public class DecisionRequirementsQueryControllerTest extends RestControllerTest 
 
   static final String EXPECTED_SEARCH_RESPONSE =
       """
-      {
-          "items": [
-              {
-                  "tenantId": "t",
-                  "decisionRequirementsKey": 0,
-                  "dmnDecisionRequirementsName": "name",
-                  "version": 1,
-                  "dmnDecisionRequirementsId": "id",
-                  "resourceName": "rN"
+          {
+              "items": [
+                  {
+                      "tenantId": "t",
+                      "decisionRequirementsKey": 0,
+                      "dmnDecisionRequirementsName": "name",
+                      "version": 1,
+                      "dmnDecisionRequirementsId": "id",
+                      "resourceName": "rN"
+                  }
+              ],
+              "page": {
+                  "totalItems": 1,
+                  "firstSortValues": [],
+                  "lastSortValues": [
+                      "v"
+                  ]
               }
-          ],
-          "page": {
-              "totalItems": 1,
-              "firstSortValues": [],
-              "lastSortValues": [
-                  "v"
-              ]
-          }
-      }""";
+          }""";
 
   static final SearchQueryResult<DecisionRequirementsEntity> SEARCH_QUERY_RESULT =
       new Builder<DecisionRequirementsEntity>()
@@ -127,15 +127,15 @@ public class DecisionRequirementsQueryControllerTest extends RestControllerTest 
         .thenReturn(SEARCH_QUERY_RESULT);
     final var request =
         """
-        {
-          "filter":{
-            "tenantId": "t",
-            "decisionRequirementsKey": 0,
-            "dmnDecisionRequirementsName": "name",
-            "version": 1,
-            "dmnDecisionRequirementsId": "drId"
-          }
-        }""";
+            {
+              "filter":{
+                "tenantId": "t",
+                "decisionRequirementsKey": 0,
+                "dmnDecisionRequirementsName": "name",
+                "version": 1,
+                "dmnDecisionRequirementsId": "drId"
+              }
+            }""";
 
     // when / then
     webClient
@@ -174,30 +174,30 @@ public class DecisionRequirementsQueryControllerTest extends RestControllerTest 
         .thenReturn(SEARCH_QUERY_RESULT);
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "field": "version",
-                    "order": "asc"
-                },
-                {
-                    "field": "dmnDecisionRequirementsName",
-                    "order": "asc"
-                },
-                {
-                    "field": "tenantId",
-                    "order": "desc"
-                },
-                {
-                    "field": "decisionRequirementsKey",
-                    "order": "asc"
-                },
-                {
-                    "field": "dmnDecisionRequirementsId",
-                    "order": "asc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "field": "version",
+                        "order": "asc"
+                    },
+                    {
+                        "field": "dmnDecisionRequirementsName",
+                        "order": "asc"
+                    },
+                    {
+                        "field": "tenantId",
+                        "order": "desc"
+                    },
+                    {
+                        "field": "decisionRequirementsKey",
+                        "order": "asc"
+                    },
+                    {
+                        "field": "dmnDecisionRequirementsId",
+                        "order": "asc"
+                    }
+                ]
+            }""";
     // when / then
     webClient
         .post()
@@ -238,24 +238,24 @@ public class DecisionRequirementsQueryControllerTest extends RestControllerTest 
     // given
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "field": "unknownField",
-                    "order": "asc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "field": "unknownField",
+                        "order": "asc"
+                    }
+                ]
+            }""";
     final var expectedResponse =
         String.format(
             """
-        {
-          "type": "about:blank",
-          "title": "INVALID_ARGUMENT",
-          "status": 400,
-          "detail": "Unknown sortBy: unknownField.",
-          "instance": "%s"
-        }""",
+                {
+                  "type": "about:blank",
+                  "title": "INVALID_ARGUMENT",
+                  "status": 400,
+                  "detail": "Unknown sortBy: unknownField.",
+                  "instance": "%s"
+                }""",
             DECISION_REQUIREMENTS_SEARCH_URL);
     // when / then
     webClient

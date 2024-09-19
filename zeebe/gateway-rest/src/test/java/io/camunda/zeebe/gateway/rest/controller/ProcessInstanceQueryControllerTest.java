@@ -12,13 +12,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.camunda.search.entities.ProcessInstanceEntity;
+import io.camunda.search.query.ProcessInstanceQuery;
+import io.camunda.search.query.SearchQueryResult;
+import io.camunda.search.query.SearchQueryResult.Builder;
+import io.camunda.search.security.auth.Authentication;
+import io.camunda.search.sort.ProcessInstanceSort;
 import io.camunda.service.ProcessInstanceServices;
-import io.camunda.service.entities.ProcessInstanceEntity;
-import io.camunda.service.search.query.ProcessInstanceQuery;
-import io.camunda.service.search.query.SearchQueryResult;
-import io.camunda.service.search.query.SearchQueryResult.Builder;
-import io.camunda.service.search.sort.ProcessInstanceSort;
-import io.camunda.service.security.auth.Authentication;
 import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,33 +34,33 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
 
   static final String EXPECTED_SEARCH_RESPONSE =
       """
-      {
-          "items": [
-            {
-              "key": 123,
-              "bpmnProcessId": "demoProcess",
-              "processName": "Demo Process",
-              "processVersion": 5,
-              "processVersionTag": "v5",
-              "processDefinitionKey": 789,
-              "rootProcessInstanceKey": 345,
-              "parentProcessInstanceKey": 333,
-              "parentFlowNodeInstanceKey": 777,
-              "treePath": "PI_1/PI_2",
-              "startDate": "2024-01-01T00:00:00Z",
-              "state": "ACTIVE",
-              "incident": false,
-              "tenantId": "tenant"
-            }
-          ],
-          "page": {
-              "totalItems": 1,
-              "firstSortValues": [],
-              "lastSortValues": [
-                  "v"
-              ]
-          }
-      }""";
+          {
+              "items": [
+                {
+                  "key": 123,
+                  "bpmnProcessId": "demoProcess",
+                  "processName": "Demo Process",
+                  "processVersion": 5,
+                  "processVersionTag": "v5",
+                  "processDefinitionKey": 789,
+                  "rootProcessInstanceKey": 345,
+                  "parentProcessInstanceKey": 333,
+                  "parentFlowNodeInstanceKey": 777,
+                  "treePath": "PI_1/PI_2",
+                  "startDate": "2024-01-01T00:00:00Z",
+                  "state": "ACTIVE",
+                  "incident": false,
+                  "tenantId": "tenant"
+                }
+              ],
+              "page": {
+                  "totalItems": 1,
+                  "firstSortValues": [],
+                  "lastSortValues": [
+                      "v"
+                  ]
+              }
+          }""";
   private static final String PROCESS_INSTANCES_SEARCH_URL = "/v2/process-instances/search";
   private static final SearchQueryResult<ProcessInstanceEntity> SEARCH_QUERY_RESULT =
       new Builder<ProcessInstanceEntity>()
@@ -83,9 +83,10 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
                       ProcessInstanceEntity.ProcessInstanceState.ACTIVE,
                       false,
                       "tenant")))
-          .sortValues(new Object[] {"v"})
+          .sortValues(new Object[]{"v"})
           .build();
-  @MockBean ProcessInstanceServices processInstanceServices;
+  @MockBean
+  ProcessInstanceServices processInstanceServices;
 
   @BeforeEach
   void setupServices() {
@@ -144,18 +145,18 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
         .thenReturn(SEARCH_QUERY_RESULT);
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "field": "bpmnProcessId",
-                    "order": "desc"
-                },
-                {
-                    "field": "processDefinitionKey",
-                    "order": "asc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "field": "bpmnProcessId",
+                        "order": "desc"
+                    },
+                    {
+                        "field": "processDefinitionKey",
+                        "order": "asc"
+                    }
+                ]
+            }""";
     // when / then
     webClient
         .post()
@@ -189,24 +190,24 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "field": "bpmnProcessId",
-                    "order": "dsc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "field": "bpmnProcessId",
+                        "order": "dsc"
+                    }
+                ]
+            }""";
     final var expectedResponse =
         String.format(
             """
-        {
-          "type": "about:blank",
-          "title": "INVALID_ARGUMENT",
-          "status": 400,
-          "detail": "Unknown sortOrder: dsc.",
-          "instance": "%s"
-        }""",
+                {
+                  "type": "about:blank",
+                  "title": "INVALID_ARGUMENT",
+                  "status": 400,
+                  "detail": "Unknown sortOrder: dsc.",
+                  "instance": "%s"
+                }""",
             PROCESS_INSTANCES_SEARCH_URL);
     // when / then
     webClient
@@ -231,24 +232,24 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "field": "unknownField",
-                    "order": "asc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "field": "unknownField",
+                        "order": "asc"
+                    }
+                ]
+            }""";
     final var expectedResponse =
         String.format(
             """
-        {
-          "type": "about:blank",
-          "title": "INVALID_ARGUMENT",
-          "status": 400,
-          "detail": "Unknown sortBy: unknownField.",
-          "instance": "%s"
-        }""",
+                {
+                  "type": "about:blank",
+                  "title": "INVALID_ARGUMENT",
+                  "status": 400,
+                  "detail": "Unknown sortBy: unknownField.",
+                  "instance": "%s"
+                }""",
             PROCESS_INSTANCES_SEARCH_URL);
     // when / then
     webClient
@@ -273,23 +274,23 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-            "sort": [
-                {
-                    "order": "asc"
-                }
-            ]
-        }""";
+            {
+                "sort": [
+                    {
+                        "order": "asc"
+                    }
+                ]
+            }""";
     final var expectedResponse =
         String.format(
             """
-        {
-          "type": "about:blank",
-          "title": "INVALID_ARGUMENT",
-          "status": 400,
-          "detail": "Sort field must not be null.",
-          "instance": "%s"
-        }""",
+                {
+                  "type": "about:blank",
+                  "title": "INVALID_ARGUMENT",
+                  "status": 400,
+                  "detail": "Sort field must not be null.",
+                  "instance": "%s"
+                }""",
             PROCESS_INSTANCES_SEARCH_URL);
     // when / then
     webClient
@@ -314,22 +315,22 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-            "page": {
-                "searchAfter": ["a"],
-                "searchBefore": ["b"]
-            }
-        }""";
+            {
+                "page": {
+                    "searchAfter": ["a"],
+                    "searchBefore": ["b"]
+                }
+            }""";
     final var expectedResponse =
         String.format(
             """
-        {
-          "type": "about:blank",
-          "title": "INVALID_ARGUMENT",
-          "status": 400,
-          "detail": "Both searchAfter and searchBefore cannot be set at the same time.",
-          "instance": "%s"
-        }""",
+                {
+                  "type": "about:blank",
+                  "title": "INVALID_ARGUMENT",
+                  "status": 400,
+                  "detail": "Both searchAfter and searchBefore cannot be set at the same time.",
+                  "instance": "%s"
+                }""",
             PROCESS_INSTANCES_SEARCH_URL);
     // when / then
     webClient
