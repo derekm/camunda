@@ -124,4 +124,15 @@ public class MemberBuilder extends NodeBuilder {
     config.setProperties(properties);
     return this;
   }
+
+  /**
+   * Sets the host to which the member belongs.
+   *
+   * @param prefix the prefix of the member
+   * @return the member builder
+   */
+  public MemberBuilder withPrefix(final String prefix) {
+    config.setPrefix(prefix);
+    return this;
+  }
 }

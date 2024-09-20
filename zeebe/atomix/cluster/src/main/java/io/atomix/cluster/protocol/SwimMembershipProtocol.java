@@ -185,11 +185,8 @@ public class SwimMembershipProtocol
 
       registerHandlers();
 
-      //      clusterMemberContext = new ClusterMemberContext("Broker", localMember.id(),
-      // GOSSIP_LOGGER);
-      //      MDC.put("actor-scheduler", "join-Broker-1231");
       swimScheduler.execute(
-          () -> MDC.put("actor-scheduler", "SwimScheduler-Broker-" + member.id()));
+          () -> MDC.put("actor-scheduler", "SwimScheduler-" + member.prefix() + "-" + member.id()));
 
       scheduleGossip();
       scheduleProbe();
@@ -989,6 +986,22 @@ public class SwimMembershipProtocol
         final Version version,
         final long timestamp) {
       super(id, address, zone, rack, host, properties);
+      this.version = version;
+      this.timestamp = timestamp;
+      incarnationNumber = System.currentTimeMillis();
+    }
+
+    SwimMember(
+        final MemberId id,
+        final Address address,
+        final String zone,
+        final String rack,
+        final String host,
+        final String prefix,
+        final Properties properties,
+        final Version version,
+        final long timestamp) {
+      super(id, address, zone, rack, host, prefix, properties);
       this.version = version;
       this.timestamp = timestamp;
       incarnationNumber = System.currentTimeMillis();

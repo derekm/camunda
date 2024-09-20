@@ -26,6 +26,7 @@ public class MemberConfig extends NodeConfig {
   private String zoneId;
   private String rackId;
   private String hostId;
+  private String prefix;
   private Properties properties = new Properties();
 
   /**
@@ -173,6 +174,26 @@ public class MemberConfig extends NodeConfig {
    */
   public MemberConfig setProperties(final Properties properties) {
     this.properties = properties;
+    return this;
+  }
+
+  /**
+   * Returns the member prefix.
+   *
+   * @return the member prefix
+   */
+  public String getPrefix() {
+    return prefix;
+  }
+
+  /**
+   * Sets the member prefix.
+   *
+   * @param prefix the member prefix
+   * @return the member configuration
+   */
+  public MemberConfig setPrefix(final String prefix) {
+    this.prefix = prefix;
     return this;
   }
 }

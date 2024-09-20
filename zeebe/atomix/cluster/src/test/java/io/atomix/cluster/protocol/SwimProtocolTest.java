@@ -87,15 +87,33 @@ public class SwimProtocolTest extends ConcurrentTestCase {
         System.currentTimeMillis());
   }
 
+  private Member member(
+      final String id,
+      final String host,
+      final int port,
+      final Version version,
+      final String prefix) {
+    return new SwimMembershipProtocol.SwimMember(
+        MemberId.from(id),
+        new Address(host, port),
+        null,
+        null,
+        null,
+        prefix,
+        new Properties(),
+        version,
+        System.currentTimeMillis());
+  }
+
   @Before
   @SuppressWarnings("unchecked")
   public void reset() {
     messagingServiceFactory = new TestMessagingServiceFactory();
     unicastServiceFactory = new TestUnicastServiceFactory();
 
-    member1 = member("1", "localhost", 5001, version1);
-    member2 = member("2", "localhost", 5002, version1);
-    member3 = member("3", "localhost", 5003, version1);
+    member1 = member("1", "localhost", 5001, version1, "Broker");
+    member2 = member("2", "localhost", 5002, version1, "Broker");
+    member3 = member("3", "localhost", 5003, version1, "Gateway");
     members = Arrays.asList(member1, member2, member3);
     nodes = (Collection) members;
     listeners = Maps.newConcurrentMap();

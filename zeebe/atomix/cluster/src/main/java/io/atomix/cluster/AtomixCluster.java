@@ -330,6 +330,7 @@ public class AtomixCluster implements BootstrapService, Managed<Void> {
             .withRackId(config.getNodeConfig().getRackId())
             .withZoneId(config.getNodeConfig().getZoneId())
             .withProperties(config.getNodeConfig().getProperties())
+            .withPrefix(config.getNodeConfig().getPrefix())
             .build();
     return new DefaultClusterMembershipService(
         localMember,

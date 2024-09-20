@@ -32,6 +32,7 @@ public class Member extends Node {
   private final String zone;
   private final String rack;
   private final String host;
+  private final String prefix;
   private final Properties properties;
 
   public Member(final MemberConfig config) {
@@ -42,6 +43,7 @@ public class Member extends Node {
     host = config.getHostId();
     properties = new Properties();
     properties.putAll(config.getProperties());
+    prefix = config.getPrefix() != null ? config.getPrefix() : "";
   }
 
   protected Member(final MemberId id, final Address address) {
@@ -61,6 +63,24 @@ public class Member extends Node {
     this.rack = rack;
     this.host = host;
     this.properties = properties;
+    prefix = "";
+  }
+
+  protected Member(
+      final MemberId id,
+      final Address address,
+      final String zone,
+      final String rack,
+      final String host,
+      final String prefix,
+      final Properties properties) {
+    super(id, address);
+    this.id = checkNotNull(id, "id cannot be null");
+    this.zone = zone;
+    this.rack = rack;
+    this.host = host;
+    this.properties = properties;
+    this.prefix = prefix != null ? prefix : "";
   }
 
   /**
@@ -149,12 +169,13 @@ public class Member extends Node {
         .setZoneId(zone())
         .setRackId(rack())
         .setHostId(host())
+        .setPrefix(prefix())
         .setProperties(properties());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), id, zone, rack, host, properties);
+    return Objects.hash(super.hashCode(), id, zone, rack, host, prefix, properties);
   }
 
   @Override
@@ -176,6 +197,7 @@ public class Member extends Node {
         && Objects.equals(zone, member.zone)
         && Objects.equals(rack, member.rack)
         && Objects.equals(host, member.host)
+        && Objects.equals(prefix, member.prefix)
         && Objects.equals(properties, member.properties);
   }
 
@@ -187,6 +209,7 @@ public class Member extends Node {
         .add("zone", zone())
         .add("rack", rack())
         .add("host", host())
+        .add("prefix", prefix())
         .add("properties", properties())
         .omitNullValues()
         .toString();
@@ -262,5 +285,14 @@ public class Member extends Node {
    */
   public long timestamp() {
     return UNKNOWN_TIMESTAMP;
+  }
+
+  /**
+   * Returns the member prefix.
+   *
+   * @return the member prefix
+   */
+  public String prefix() {
+    return prefix;
   }
 }

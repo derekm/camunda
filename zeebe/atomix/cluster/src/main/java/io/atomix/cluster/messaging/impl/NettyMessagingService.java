@@ -405,7 +405,7 @@ public final class NettyMessagingService implements ManagedMessagingService {
                       new DefaultThreadFactory("netty-messaging-timeout-"));
               localConnection = new LocalClientConnection(handlers);
               started.set(true);
-
+              // TODO: Change here
               log.info(
                   "Started messaging service bound to {}, advertising {}, and using {}",
                   bindingAddresses,

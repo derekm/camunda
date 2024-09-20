@@ -338,6 +338,7 @@ public class ClusteringRule extends ExternalResource {
     final var brokerBase = getBrokerBase(nodeId);
     final var brokerCfg = getBrokerCfg(nodeId);
     final var brokerSpringConfig = getBrokerConfiguration(brokerBase, brokerCfg);
+    brokerSpringConfig.clusterConfig().getNodeConfig().setPrefix("Broker");
     brokerCfg.init(brokerBase.getAbsolutePath());
 
     final var atomixCluster =
@@ -468,13 +469,12 @@ public class ClusteringRule extends ExternalResource {
   private GatewayResource createGateway(final GatewayBasedProperties gatewayCfg) {
     final var config = new GatewayBasedConfiguration(gatewayCfg, new LifecycleProperties());
     final var clusterConfig = config.clusterConfig();
+    clusterConfig.getNodeConfig().setPrefix("Gateway");
     final var actorConfig = config.schedulerConfiguration();
 
     final ActorScheduler actorScheduler =
         new ActorSchedulerConfiguration(
-                actorConfig,
-                IdleStrategySupplier.ofDefault(),
-                actorClockConfiguration) // TODO: Pick this to know it's a Gateway
+                actorConfig, IdleStrategySupplier.ofDefault(), actorClockConfiguration)
             .scheduler();
 
     final var clusterConfiguration = new AtomixClusterConfiguration(clusterConfig);
