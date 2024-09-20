@@ -42,8 +42,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.ClearScrollResponse;
 import org.elasticsearch.action.search.SearchScrollRequest;
@@ -72,6 +70,7 @@ import org.elasticsearch.search.aggregations.metrics.ValueCountAggregationBuilde
 import org.elasticsearch.xcontent.ContextParser;
 import org.elasticsearch.xcontent.DeprecationHandler;
 import org.elasticsearch.xcontent.NamedXContentRegistry;
+import org.elasticsearch.xcontent.NamedXContentRegistry.Entry;
 import org.elasticsearch.xcontent.ParseField;
 import org.elasticsearch.xcontent.XContentParser;
 import org.elasticsearch.xcontent.json.JsonXContent;
@@ -118,17 +117,18 @@ import org.opensearch.client.opensearch.indices.RolloverResponse;
 import org.opensearch.client.opensearch.indices.rollover.RolloverConditions;
 import org.opensearch.client.opensearch.tasks.GetTasksResponse;
 import org.opensearch.client.opensearch.tasks.Status;
+import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 
-@Slf4j
 public class OptimizeOpenSearchClient extends DatabaseClient {
 
-  @Getter private ExtendedOpenSearchClient openSearchClient;
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(OptimizeOpenSearchClient.class);
 
-  @Getter private OpenSearchAsyncClient openSearchAsyncClient;
-
-  @Getter private RichOpenSearchClient richOpenSearchClient;
-  @Getter private List<NamedXContentRegistry.Entry> defaultNamedXContents;
+  private ExtendedOpenSearchClient openSearchClient;
+  private OpenSearchAsyncClient openSearchAsyncClient;
+  private RichOpenSearchClient richOpenSearchClient;
+  private List<NamedXContentRegistry.Entry> defaultNamedXContents;
 
   public OptimizeOpenSearchClient(
       final ExtendedOpenSearchClient openSearchClient,
@@ -504,7 +504,7 @@ public class OptimizeOpenSearchClient extends DatabaseClient {
                             jsonQuery)
                         .count();
                   } catch (final IOException e) {
-                    throw new RuntimeException(e);
+                    throw new OptimizeRuntimeException(e);
                   }
                 })
             .sum();
@@ -941,5 +941,21 @@ public class OptimizeOpenSearchClient extends DatabaseClient {
       log.warn("exception while de-serializing response " + e.getMessage());
       return null;
     }
+  }
+
+  public ExtendedOpenSearchClient getOpenSearchClient() {
+    return openSearchClient;
+  }
+
+  public OpenSearchAsyncClient getOpenSearchAsyncClient() {
+    return openSearchAsyncClient;
+  }
+
+  public RichOpenSearchClient getRichOpenSearchClient() {
+    return richOpenSearchClient;
+  }
+
+  public List<Entry> getDefaultNamedXContents() {
+    return defaultNamedXContents;
   }
 }
