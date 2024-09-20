@@ -581,7 +581,6 @@ public class ClusteringRule extends ExternalResource {
     brokers.forEach(this::stopBroker);
     brokers.forEach(this::getBroker);
     try {
-
       startBrokers().join();
       waitForTopology(
           assertion -> assertion.isComplete(clusterSize, partitionCount, replicationFactor));

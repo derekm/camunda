@@ -17,7 +17,6 @@
 package io.atomix.utils.concurrent;
 
 import java.lang.ref.WeakReference;
-import org.slf4j.MDC;
 
 /**
  * Atomix thread.
@@ -55,9 +54,5 @@ public class AtomixThread extends Thread {
    */
   public void setContext(final ThreadContext context) {
     this.context = new WeakReference<>(context);
-    context.execute(
-        () -> {
-          MDC.put("actor-scheduler", "ThreadContext-Broker-1231");
-        });
   }
 }
