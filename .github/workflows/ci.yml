@@ -147,6 +147,7 @@ jobs:
         run: |
           sudo apt-get -qq update && sudo apt-get install -y strace
           sudo sysctl -w kernel.yama.ptrace_scope=0
+          echo wip, change to get a first reference run of this job
       - uses: ./.github/actions/setup-zeebe
         with:
           secret_vault_secretId: ${{ secrets.VAULT_SECRET_ID }}
