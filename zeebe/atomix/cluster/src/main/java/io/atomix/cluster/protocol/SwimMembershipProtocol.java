@@ -991,22 +991,6 @@ public class SwimMembershipProtocol
       incarnationNumber = System.currentTimeMillis();
     }
 
-    SwimMember(
-        final MemberId id,
-        final Address address,
-        final String zone,
-        final String rack,
-        final String host,
-        final String prefix,
-        final Properties properties,
-        final Version version,
-        final long timestamp) {
-      super(id, address, zone, rack, host, prefix, properties);
-      this.version = version;
-      this.timestamp = timestamp;
-      incarnationNumber = System.currentTimeMillis();
-    }
-
     SwimMember(final ImmutableMember member) {
       super(
           member.id(),

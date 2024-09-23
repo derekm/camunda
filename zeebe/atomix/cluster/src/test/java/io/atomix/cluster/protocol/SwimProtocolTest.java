@@ -29,6 +29,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import io.atomix.cluster.BootstrapService;
 import io.atomix.cluster.Member;
+import io.atomix.cluster.MemberConfig;
 import io.atomix.cluster.MemberId;
 import io.atomix.cluster.Node;
 import io.atomix.cluster.TestBootstrapService;
@@ -93,16 +94,9 @@ public class SwimProtocolTest extends ConcurrentTestCase {
       final int port,
       final Version version,
       final String prefix) {
-    return new SwimMembershipProtocol.SwimMember(
-        MemberId.from(id),
-        new Address(host, port),
-        null,
-        null,
-        null,
-        prefix,
-        new Properties(),
-        version,
-        System.currentTimeMillis());
+    final var config = new MemberConfig();
+    config.setId(id).setAddress(new Address(host, port)).setPrefix(prefix);
+    return new Member(config);
   }
 
   @Before
