@@ -95,7 +95,7 @@ public class SwimProtocolTest extends ConcurrentTestCase {
       final Version version,
       final String prefix) {
     final var config = new MemberConfig();
-    config.setId(id).setAddress(new Address(host, port)).setPrefix(prefix);
+    config.setId(id).setAddress(new Address(host, port)); // .setPrefix(prefix);
     return new Member(config);
   }
 

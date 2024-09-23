@@ -192,13 +192,14 @@ final class StandaloneGatewaySecurityTest {
     final var brokerClientConfig = gatewayConfig.brokerClientConfig();
 
     final var clusterConfig = gatewayConfig.clusterConfig();
-    final var clusterConfiguration = new AtomixClusterConfiguration(clusterConfig);
-    atomixCluster = clusterConfiguration.atomixCluster();
+
     final ActorSchedulerConfiguration actorSchedulerConfiguration =
         new ActorSchedulerConfiguration(
             schedulerConfig, IdleStrategySupplier.ofDefault(), new ActorClockConfiguration(false));
 
     actorScheduler = actorSchedulerConfiguration.scheduler();
+    final var clusterConfiguration = new AtomixClusterConfiguration(clusterConfig, null);
+    atomixCluster = clusterConfiguration.atomixCluster();
     final var topologyServices = new DynamicClusterServices(actorScheduler, atomixCluster);
     final var topologyManager = topologyServices.brokerTopologyManager();
     topologyServices.gatewayClusterTopologyService(topologyManager);

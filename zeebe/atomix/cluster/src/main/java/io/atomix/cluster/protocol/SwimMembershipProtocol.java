@@ -127,6 +127,7 @@ public class SwimMembershipProtocol
       (address, payload) -> handleGossipUpdates(SERIALIZER.decode(payload));
   private final SwimMembershipProtocolMetrics swimMembershipProtocolMetrics =
       new SwimMembershipProtocolMetrics();
+  private String prefix;
 
   SwimMembershipProtocol(final SwimMembershipProtocolConfig config) {
     this.config = config;
@@ -159,6 +160,15 @@ public class SwimMembershipProtocol
   @Override
   public CompletableFuture<Void> join(
       final BootstrapService bootstrap, final NodeDiscoveryService discovery, final Member member) {
+    return join(bootstrap, discovery, member, prefix);
+  }
+
+  @Override
+  public CompletableFuture<Void> join(
+      final BootstrapService bootstrap,
+      final NodeDiscoveryService discovery,
+      final Member member,
+      final String prefix) {
     if (started.compareAndSet(false, true)) {
       bootstrapService = bootstrap;
       discoveryService = discovery;
@@ -186,7 +196,7 @@ public class SwimMembershipProtocol
       registerHandlers();
 
       swimScheduler.execute(
-          () -> MDC.put("actor-scheduler", "SwimScheduler-" + member.prefix() + "-" + member.id()));
+          () -> MDC.put("actor-scheduler", "SwimScheduler-" + prefix + "-" + member.id()));
 
       scheduleGossip();
       scheduleProbe();

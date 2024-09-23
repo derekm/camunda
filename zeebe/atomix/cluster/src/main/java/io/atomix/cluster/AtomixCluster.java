@@ -102,15 +102,16 @@ public class AtomixCluster implements BootstrapService, Managed<Void> {
   protected final ThreadContext threadContext = new SingleThreadContext("atomix-cluster-%d");
   private final AtomicBoolean started = new AtomicBoolean();
 
-  public AtomixCluster(final ClusterConfig config, final Version version) {
-    this(config, version, buildMessagingService(config), buildUnicastService(config));
+  public AtomixCluster(final ClusterConfig config, final Version version, final String prefix) {
+    this(config, version, buildMessagingService(config), buildUnicastService(config), prefix);
   }
 
   protected AtomixCluster(
       final ClusterConfig config,
       final Version version,
       final ManagedMessagingService messagingService,
-      final ManagedUnicastService unicastService) {
+      final ManagedUnicastService unicastService,
+      final String prefix) {
     this.messagingService =
         messagingService != null ? messagingService : buildMessagingService(config);
     this.unicastService = unicastService != null ? unicastService : buildUnicastService(config);
@@ -118,7 +119,8 @@ public class AtomixCluster implements BootstrapService, Managed<Void> {
     discoveryProvider = buildLocationProvider(config);
     membershipProtocol = buildMembershipProtocol(config);
     membershipService =
-        buildClusterMembershipService(config, this, discoveryProvider, membershipProtocol, version);
+        buildClusterMembershipService(
+            config, this, discoveryProvider, membershipProtocol, version, prefix);
     communicationService =
         buildClusterMessagingService(
             getMembershipService(), getMessagingService(), getUnicastService());
@@ -320,7 +322,8 @@ public class AtomixCluster implements BootstrapService, Managed<Void> {
       final BootstrapService bootstrapService,
       final NodeDiscoveryProvider discoveryProvider,
       final GroupMembershipProtocol membershipProtocol,
-      final Version version) {
+      final Version version,
+      final String prefix) {
     // If the local node has not be configured, create a default node.
     final Member localMember =
         Member.builder()
@@ -330,10 +333,11 @@ public class AtomixCluster implements BootstrapService, Managed<Void> {
             .withRackId(config.getNodeConfig().getRackId())
             .withZoneId(config.getNodeConfig().getZoneId())
             .withProperties(config.getNodeConfig().getProperties())
-            .withPrefix(config.getNodeConfig().getPrefix())
+            //            .withPrefix(config.getNodeConfig().getPrefix())
             .build();
     return new DefaultClusterMembershipService(
         localMember,
+        prefix,
         version,
         new DefaultNodeDiscoveryService(bootstrapService, localMember, discoveryProvider),
         bootstrapService,

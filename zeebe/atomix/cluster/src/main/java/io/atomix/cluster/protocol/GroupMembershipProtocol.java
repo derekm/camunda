@@ -57,6 +57,12 @@ public interface GroupMembershipProtocol
   CompletableFuture<Void> join(
       BootstrapService bootstrap, NodeDiscoveryService discovery, Member localMember);
 
+  CompletableFuture<Void> join(
+      BootstrapService bootstrap,
+      NodeDiscoveryService discovery,
+      Member localMember,
+      String prefix);
+
   /**
    * Leaves the cluster.
    *

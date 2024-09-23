@@ -131,8 +131,8 @@ public class MemberBuilder extends NodeBuilder {
    * @param prefix the prefix of the member
    * @return the member builder
    */
-  public MemberBuilder withPrefix(final String prefix) {
-    config.setPrefix(prefix);
-    return this;
-  }
+  //  public MemberBuilder withPrefix(final String prefix) {
+  //    config.setPrefix(prefix);
+  //    return this;
+  //  }
 }

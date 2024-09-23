@@ -88,6 +88,15 @@ public final class DiscoveryMembershipProtocol
 
     return CompletableFuture.completedFuture(null);
   }
+  
+  @Override
+  public CompletableFuture<Void> join(
+      final BootstrapService bootstrap,
+      final NodeDiscoveryService discovery,
+      final Member localMember,
+      final String prefix) {
+    return join(bootstrap, discovery, localMember);
+  }
 
   @Override
   public CompletableFuture<Void> leave(final Member localMember) {

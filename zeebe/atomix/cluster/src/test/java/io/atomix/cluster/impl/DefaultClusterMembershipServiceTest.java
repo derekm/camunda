@@ -59,7 +59,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "discovery", version, discoveryService, bootstrapService, protocol);
 
     // when - then
     membershipService.start().join();
@@ -77,7 +77,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "local", version, discoveryService, bootstrapService, protocol);
 
     // when
     membershipService.start().join();
@@ -96,7 +96,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "get", version, discoveryService, bootstrapService, protocol);
 
     // when
     protocol.getMembers().add(Member.member("1", "localhost:5001"));
@@ -117,7 +117,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "", version, discoveryService, bootstrapService, protocol);
 
     // when - then
     membershipService.start().join();
@@ -137,7 +137,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "", version, discoveryService, bootstrapService, protocol);
 
     // when - then
     membershipService.start().join();
@@ -157,7 +157,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "", version, discoveryService, bootstrapService, protocol);
 
     // when - then
     membershipService.start().join();
@@ -175,7 +175,7 @@ final class DefaultClusterMembershipServiceTest {
     // given
     final var membershipService =
         new DefaultClusterMembershipService(
-            localMember, version, discoveryService, bootstrapService, protocol);
+            localMember, "", version, discoveryService, bootstrapService, protocol);
     membershipService.start().join();
 
     // when
