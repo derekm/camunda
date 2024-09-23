@@ -64,5 +64,4 @@ public class UserTaskServiceTest {
     // then
     assertThat(searchQueryResult).isEqualTo(entity);
   }
-
 }

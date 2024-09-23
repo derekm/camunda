@@ -57,10 +57,11 @@ public class RestErrorMapper {
             yield RestErrorMapper.createProblemDetail(HttpStatus.CONFLICT, message, title);
           case INVALID_ARGUMENT:
             yield RestErrorMapper.createProblemDetail(HttpStatus.BAD_REQUEST, message, title);
-          default: {
-            yield RestErrorMapper.createProblemDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR, message, title);
-          }
+          default:
+            {
+              yield RestErrorMapper.createProblemDetail(
+                  HttpStatus.INTERNAL_SERVER_ERROR, message, title);
+            }
         };
       };
   private static final Logger REST_GATEWAY_LOGGER =

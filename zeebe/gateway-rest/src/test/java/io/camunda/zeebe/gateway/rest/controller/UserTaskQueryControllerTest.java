@@ -127,11 +127,10 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
                       1, // processDefinitionVersion
                       Collections.emptyMap(), // customHeaders
                       50 // priority
-                  )))
-          .sortValues(new Object[]{"v"})
+                      )))
+          .sortValues(new Object[] {"v"})
           .build();
-  @MockBean
-  UserTaskServices userTaskServices;
+  @MockBean UserTaskServices userTaskServices;
 
   @BeforeEach
   void setupServices() {

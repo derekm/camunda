@@ -44,11 +44,9 @@ class SearchClientBasedQueryExecutorTest {
           null,
           ProcessInstanceState.ACTIVE,
           false,
-          null
-      );
+          null);
 
-  @Mock
-  private DocumentCamundaSearchClient searchClient;
+  @Mock private DocumentCamundaSearchClient searchClient;
   private final ServiceTransformers serviceTransformers = ServiceTransformers.newInstance();
 
   private SearchClientBasedQueryExecutor queryExecutor;

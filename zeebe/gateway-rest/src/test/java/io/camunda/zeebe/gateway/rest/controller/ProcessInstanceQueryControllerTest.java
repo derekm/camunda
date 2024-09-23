@@ -83,10 +83,9 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
                       ProcessInstanceEntity.ProcessInstanceState.ACTIVE,
                       false,
                       "tenant")))
-          .sortValues(new Object[]{"v"})
+          .sortValues(new Object[] {"v"})
           .build();
-  @MockBean
-  ProcessInstanceServices processInstanceServices;
+  @MockBean ProcessInstanceServices processInstanceServices;
 
   @BeforeEach
   void setupServices() {
